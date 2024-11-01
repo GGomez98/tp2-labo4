@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "tp2_labo4": {
+    "tp2-labo4": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/tp2_labo4",
+            "outputPath": "dist/tp2-labo4",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "tp2_labo4:build:production"
+              "buildTarget": "tp2-labo4:build:production"
             },
             "development": {
-              "buildTarget": "tp2_labo4:build:development"
+              "buildTarget": "tp2-labo4:build:development"
             }
           },
           "defaultConfiguration": "development"
