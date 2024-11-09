@@ -1,0 +1,23 @@
+.card-body{
+    img{
+        width: 90%;
+        min-height: 500px;
+        max-height: 500px;
+        margin: 10px;
+        object-fit: cover;
+    }
+    .ingresar-img{
+        object-fit: fill;
+    }
+    button{
+        background-color: rgb(44, 138, 179);
+        color: white;
+    }
+    button:hover{
+        background-color: rgb(70, 190, 241);
+    }
+}
+
+.row{
+    margin: 0;
+}
