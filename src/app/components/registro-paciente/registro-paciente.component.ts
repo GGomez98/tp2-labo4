@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro-paciente',
@@ -47,6 +48,16 @@ export class RegistroPacienteComponent {
     this.formularioEnviado = true;
 
     if (this.registroForm.valid) {
+      Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
+        background: '#fff',
+        color: '#000',
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
       let userData = {
         nombre: this.registroForm.value.nombre,
@@ -58,10 +69,16 @@ export class RegistroPacienteComponent {
         imagen1: this.registroForm.value.imagen1,
         imagen2: this.registroForm.value.imagen2
       };
-        this.usuarioService.registrarUsuarios(userData, 'pacientes');
-        createUserWithEmailAndPassword(this.auth,userData.email,this.registroForm.value.password).then(()=>{
+        createUserWithEmailAndPassword(this.auth,userData.email,this.registroForm.value.password).then(async ()=>{
+            await this.usuarioService.registrarUsuarios(userData, 'pacientes');
             sendEmailVerification(this.auth.currentUser as User)
             signOut(this.auth);
+            Swal.fire({
+              title: `El usuario fue creado exitosamente, enviamos un mail a su correo electronico para la verificacion`,
+              background: '#fff',
+              color: '#000',
+              confirmButtonColor: '#ff5722'
+            })
             console.log('Usuario registrado exitosamente');
             this.registroForm.reset();
             this.fileInput1.nativeElement.value = '';
