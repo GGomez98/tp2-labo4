@@ -1,20 +1,60 @@
+.container-fluid{
+    justify-content: center;
+    .col{
+        width: 100%;
+        height:450px;
+        display: flex;
+        justify-content: center;
+    }
+}
 .card-body{
-    img{
-        width: 90%;
-        min-height: 500px;
-        max-height: 500px;
-        margin: 10px;
-        object-fit: cover;
-    }
-    .ingresar-img{
-        object-fit: fill;
-    }
+    border-radius: 50%;
+    width: 600px;
+    height:450px;
+    display: flex;
+    justify-content: center;
+
     button{
-        background-color: rgb(44, 138, 179);
         color: white;
-    }
-    button:hover{
-        background-color: rgb(70, 190, 241);
+        border-radius: 50%;
+        width: 400px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+
+        .image-button-container{
+            border-radius: 50%;
+            position: relative;
+            width: 400px; /* Ajusta el tamaño de la imagen */
+            overflow: hidden; /* Asegura que el overlay solo cubra la imagen */
+            img{
+                width: 100%;
+                min-height: 400px;
+                max-height: 400px;
+                object-fit: cover;
+                border: 1px solid rgba(0, 0, 0, 0.357);
+                display: block;
+            }
+
+            .overlay-text {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0; /* Oculto por defecto */
+                transition: opacity 0.3s ease;
+            }
+        }
+
+        .image-button-container:hover .overlay-text{
+            opacity: 1;
+        }
     }
 }
 

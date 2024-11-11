@@ -10,12 +10,15 @@
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" placeholder="Ingresa tu contraseña" [(ngModel)]="userPWD" #pass [ngModelOptions]="{standalone: true}">
             </div>
-            <div id="users">
-                <button class="userbutton"><img src="/assets/images/paciente-login.png"></button>
-                <button class="userbutton"><img src="/assets/images/doctor-login.png"></button>
-                <button class="userbutton"><img src="/assets/images/admin-login.png"></button>
-            </div>
         </form>
         <button (click)="Login()">Ingresar</button>
+    </div>
+    <div class="fab-button-container" #favbuttondiv>
+        <button class="fab-button main-fab" (click)="toggleFab()" #favbutton>+</button>
+        @for(option of fabOptions; track option.email){
+            <button class="fab-button fab-option" (click)="onOptionClick(option)" [style.right] = option.pos>
+                <img src={{option.imagen}} alt="">
+            </button>
+        }
     </div>    
 </div>

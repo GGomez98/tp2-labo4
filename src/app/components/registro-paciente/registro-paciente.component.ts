@@ -5,13 +5,14 @@ import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-registro-paciente',
   standalone: true,
   imports: [ReactiveFormsModule,CommonModule],
   templateUrl: './registro-paciente.component.html',
   styleUrl: './registro-paciente.component.scss'
-})
+}) 
 
 export class RegistroPacienteComponent {
   @ViewChild('fileInput1') fileInput1!: ElementRef;
@@ -67,10 +68,11 @@ export class RegistroPacienteComponent {
         obraSocial: this.registroForm.value.obraSocial,
         email: this.registroForm.value.email,
         imagen1: this.registroForm.value.imagen1,
-        imagen2: this.registroForm.value.imagen2
+        imagen2: this.registroForm.value.imagen2,
+        rol:'paciente'
       };
         createUserWithEmailAndPassword(this.auth,userData.email,this.registroForm.value.password).then(async ()=>{
-            await this.usuarioService.registrarUsuarios(userData, 'pacientes');
+            await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
             sendEmailVerification(this.auth.currentUser as User)
             signOut(this.auth);
             Swal.fire({
@@ -134,3 +136,4 @@ export class RegistroPacienteComponent {
     return this.registroForm.get('imagen2');
   }
 }
+

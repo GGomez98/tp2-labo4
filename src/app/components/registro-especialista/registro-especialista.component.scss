@@ -9,7 +9,7 @@ body {
 
 .register-container {
     width: 1200px;
-    max-height: 700px;
+    max-height: 730px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -131,4 +131,14 @@ select {
   border: 1px solid #ddd;
   padding: 5px;
   border-radius: 4px;
+}
+
+.imagen-perfil{
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+
+.image-input{
+    margin-bottom: 130px;
 }

@@ -1,0 +1,63 @@
+<div class="register-container">
+    <h2>Registro</h2>
+    <form [formGroup]="registerForm">
+      
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" type="text" formControlName="nombre" placeholder="Ingresa tu nombre">
+        <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
+          <small class="text-danger">Sólo debe contener letras</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input id="apellido" type="text" formControlName="apellido" placeholder="Ingresa tu apellido">
+        <ng-container *ngIf="apellido?.hasError('pattern')|| apellido?.invalid && formularioEnviado">
+          <small class="text-danger">Sólo debe contener letras</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <label for="edad">Edad</label>
+        <input id="edad" type="number" formControlName="edad" placeholder="Ingresa tu edad">
+        <ng-container *ngIf="(edad?.hasError('min')||edad?.hasError('max'))|| edad?.invalid && formularioEnviado">
+          <small class="text-danger">La edad debe ser entre 18 y 99</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <label for="dni">DNI</label>
+        <input id="dni" type="number" formControlName="dni" placeholder="Ingresa tu DNI">
+        <ng-container *ngIf="dni?.hasError('minLength')&&dni?.hasError('maxLength')|| dni?.invalid && formularioEnviado">
+          <small class="text-danger">Se deben ingresar 8 digitos</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input id="email" type="email" formControlName="email" placeholder="Ingresa tu correo">
+        <ng-container *ngIf="email?.hasError('email')|| email?.invalid && formularioEnviado">
+          <small class="text-danger">Formato de email invalido</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" formControlName="password" placeholder="Ingresa tu contraseña">
+        <ng-container *ngIf="password?.hasError('minLength')||password?.invalid && formularioEnviado">
+          <small class="text-danger">La contraseña debe tener como minimo 6 caracteres</small>
+      </ng-container>
+      </div>
+  
+      <div class="form-group image-input">
+        <label for="imagenPerfil">Imagen de perfil</label>
+        <input #fileInput type="file" id="imagen" (change)="onFileChange($event, 'imagen')" accept="image/*">
+        <ng-container *ngIf="imagen?.errors?.['invalidImageCount'] && formularioEnviado">
+          <small class="text-danger">Ingrese una imagen</small>
+      </ng-container>
+      </div>
+  
+      <button (click)="onSubmit()">Registrarse</button>
+    </form>
+  </div>

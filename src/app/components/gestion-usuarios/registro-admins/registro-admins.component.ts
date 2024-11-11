@@ -1,23 +1,21 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { UsuarioService } from '../../servicios/usuario/usuario.service';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsuarioService } from '../../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
+
 @Component({
-  selector: 'app-registro-especialista',
+  selector: 'app-registro-admins',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './registro-especialista.component.html',
-  styleUrl: './registro-especialista.component.scss'
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  templateUrl: './registro-admins.component.html',
+  styleUrl: './registro-admins.component.scss'
 })
-export class RegistroEspecialistaComponent {
+export class RegistroAdminsComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   registerForm!: FormGroup;
-  especialidadesList = ['','Medicina', 'Enfermería', 'Odontología', 'Psicología'];
   formularioEnviado: boolean = false;
-  tags: string[] = [];
-  showDropdown: boolean = false;
 
   constructor(private usuarioService: UsuarioService, private auth: Auth) {}
 
@@ -28,37 +26,9 @@ export class RegistroEspecialistaComponent {
       edad: new FormControl("",[Validators.min(18),Validators.max(99),Validators.required]),
       dni: new FormControl("",[Validators.required,Validators.minLength(8),Validators.maxLength(8)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      especialidades: new FormControl(''),
       password: new FormControl('', [Validators.required,Validators.minLength(6)]),
       imagen: new FormControl('', [Validators.required, this.validarImagen]),
     });
-  }
-
-  addTag() {
-    const trimmedText = (this.registerForm.value.especialidades).trim();
-    if (trimmedText && !this.tags.includes(trimmedText)) {
-      this.tags.push(trimmedText);
-      this.registerForm.value.especialidades = '';
-    }
-  }
-
-  removeTag(index: number) {
-    this.tags.splice(index, 1);
-  }
-
-  handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      event.preventDefault(); 
-      this.addTag();
-      this.showDropdown = false;
-      this.especialidades?.reset();
-    }
-  }
-
-  addTagFromSelect(selectedOption: string) {
-    if (selectedOption && !this.tags.includes(selectedOption)) {
-      this.tags.push(selectedOption);
-    }
   }
 
   validarImagen(control: AbstractControl) {
@@ -67,16 +37,6 @@ export class RegistroEspecialistaComponent {
       return { invalidImageCount: true };
     }
     return null;
-  }
-
-  handleInputFocus() {
-    this.showDropdown = true;
-  }
-
-  handleInputBlur() {
-    setTimeout(() => {
-      this.showDropdown = false;
-    }, 200);
   }
 
   async onSubmit() {
@@ -102,15 +62,13 @@ export class RegistroEspecialistaComponent {
         dni: this.registerForm.value.dni,
         email: this.registerForm.value.email,
         imagen: this.registerForm.value.imagen,
-        especialidades: this.tags,
-        verificado: false,
-        rol:'especialista'
+        rol:'administrador'
       };
         createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async ()=>{
           await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
           signOut(this.auth);
           Swal.fire({
-            title: `El usuario fue creado exitosamente, espere a ser verificado por el administrador`,
+            title: `El usuario fue creado exitosamente`,
             background: '#fff',
             color: '#000',
             confirmButtonColor: '#ff5722'
@@ -118,7 +76,6 @@ export class RegistroEspecialistaComponent {
           console.log('Usuario registrado exitosamente');
           this.registerForm.reset();
           this.fileInput.nativeElement.value = '';
-          this.tags = [];
           this.formularioEnviado = false;
         })
     } else {
@@ -171,9 +128,6 @@ export class RegistroEspecialistaComponent {
   }
   get email() {
     return this.registerForm.get('email');
-  }
-  get especialidades() {
-    return this.registerForm.get('especialidades');
   }
   get password() {
     return this.registerForm.get('password');
