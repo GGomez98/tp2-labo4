@@ -1,5 +1,5 @@
 <div class="register-container">
-    <h2>Registro</h2>
+    <h2>Registro de Administradores</h2>
     <form [formGroup]="registerForm">
       
       <div class="form-group">
@@ -28,10 +28,10 @@
   
       <div class="form-group">
         <label for="dni">DNI</label>
-        <input id="dni" type="number" formControlName="dni" placeholder="Ingresa tu DNI">
-        <ng-container *ngIf="dni?.hasError('minLength')&&dni?.hasError('maxLength')|| dni?.invalid && formularioEnviado">
-          <small class="text-danger">Se deben ingresar 8 digitos</small>
-      </ng-container>
+        <input type="tel" id="dni" formControlName="dni" placeholder="Ingresa tu DNI">
+        <ng-container *ngIf="dni?.invalid && dni?.touched|| dni?.invalid && formularioEnviado">
+            <small class="text-danger">Se deben ingresar 8 digitos</small>
+        </ng-container>
       </div>
   
       <div class="form-group">
@@ -58,6 +58,6 @@
       </ng-container>
       </div>
   
-      <button (click)="onSubmit()">Registrarse</button>
+      <button (click)="onSubmit()">Registrar Administrador</button>
     </form>
   </div>

@@ -78,6 +78,27 @@ export class RegistroAdminsComponent {
           this.fileInput.nativeElement.value = '';
           this.formularioEnviado = false;
         })
+        .catch((e)=> {
+          Swal.close();
+          switch (e.code) {
+            case "auth/email-already-in-use":
+              Swal.fire({
+                title: `El mail ya esta en uso`,
+                background: '#fff',
+                color: '#000',
+                confirmButtonColor: '#ff5722'
+                })
+              break;
+            default:
+              Swal.fire({
+                title: `Ocurrio un error inesperado`,
+                background: '#fff',
+                color: '#000',
+                confirmButtonColor: '#ff5722'
+                })
+              break;
+          }
+        })
     } else {
       console.log('Formulario inválido');
     }

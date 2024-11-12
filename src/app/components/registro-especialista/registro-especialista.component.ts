@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
-import { Auth, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-registro-especialista',
@@ -106,21 +106,45 @@ export class RegistroEspecialistaComponent {
         verificado: false,
         rol:'especialista'
       };
-        createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async ()=>{
-          await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
-          signOut(this.auth);
-          Swal.fire({
-            title: `El usuario fue creado exitosamente, espere a ser verificado por el administrador`,
-            background: '#fff',
-            color: '#000',
-            confirmButtonColor: '#ff5722'
-          })
-          console.log('Usuario registrado exitosamente');
-          this.registerForm.reset();
-          this.fileInput.nativeElement.value = '';
-          this.tags = [];
-          this.formularioEnviado = false;
+      
+        createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async(res)=>{
+          if(res.user.email!=null)
+            await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
+            sendEmailVerification(this.auth.currentUser as User)
+            signOut(this.auth);
+            Swal.fire({
+              title: `El usuario fue creado exitosamente, enviamos un mail a su correo electronico para la verificacion`,
+              background: '#fff',
+              color: '#000',
+              confirmButtonColor: '#ff5722'
+            })
+            console.log('Usuario registrado exitosamente');
+            this.registerForm.reset();
+            this.fileInput.nativeElement.value = '';
+            this.tags = [];
+            this.formularioEnviado = false;
         })
+        .catch((e)=> {
+            Swal.close();
+            switch (e.code) {
+              case "auth/email-already-in-use":
+                Swal.fire({
+                  title: `El mail ya esta en uso`,
+                  background: '#fff',
+                  color: '#000',
+                  confirmButtonColor: '#ff5722'
+                  })
+                break;
+              default:
+                Swal.fire({
+                  title: `Ocurrio un error inesperado`,
+                  background: '#fff',
+                  color: '#000',
+                  confirmButtonColor: '#ff5722'
+                  })
+                break;
+            }
+          })
     } else {
       console.log('Formulario inválido');
     }

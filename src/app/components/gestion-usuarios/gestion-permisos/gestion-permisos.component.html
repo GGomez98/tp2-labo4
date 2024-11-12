@@ -1,9 +1,35 @@
-<ul class="list-group mb-3">
-    <li class="list-group-item d-flex justify-content-between lh-condensed">
-      <div>
-        <h6 class="my-0">Product name</h6>
-        <small class="text-muted">Brief description</small>
+<div class="card">
+  @if(usuariosCargados){
+    <h2>Estado de Especialistas</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Especialista</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let especialista of especialistas">
+          <td>{{especialista.nombre}} {{especialista.apellido}}</td>
+          <td>
+            <div class="form-check form-switch">
+              @if(especialista.verificado){
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked (click)="cambiarEstadoEspecialista(especialista, false)">
+              }
+              @else {
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (click)="cambiarEstadoEspecialista(especialista, true)">
+              }
+              <label class="form-check-label" for="flexSwitchCheckDefault">Inhabilitado/Habilitado</label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>  
+  }@else{
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <span class="text-muted">$12</span>
-    </li>
-</ul>
+    </div>
+  }
+</div>

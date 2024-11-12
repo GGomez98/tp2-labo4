@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,9 +22,12 @@ export class LoginComponent {
   flagError: boolean = false;
   msjError: string = "";
   fabOptions: any = [
-    {email: "quebraffuyottu-7479@yopmail.com", pass:"123456", imagen:"/assets/images/admin-login.png", pos:'80px'},
-    {email: "froneitrawubro-9928@yopmail.com", pass:"123456", imagen:"/assets/images/admin-login.png", pos:'140px'},
-    {email: "froneitrawubro-9928@yopmail.com", pass:"123456", imagen:"/assets/images/admin-login.png", pos:'200px'}
+    {email: "quebraffuyottu-7479@yopmail.com", pass:"123456", imagen:"/assets/images/paciente.jpg", pos:'80px'},
+    {email: "gruruttevauppeu-6330@yopmail.com", pass:"123456", imagen:"/assets/images/paciente.jpg", pos:'140px'},
+    {email: "xifroyaprouhoi-2328@yopmail.com", pass:"123456", imagen:"/assets/images/paciente.jpg", pos:'200px'},
+    {email: "veuqueuddauddamu-5932@yopmail.com", pass:"123456", imagen:"/assets/images/doctor.jpg", pos:'260px'},
+    {email: "gaukacreugrouxou-9905@yopmail.com", pass:"123456", imagen:"/assets/images/doctor.jpg", pos:'320px'},
+    {email: "admin@mail.com", pass:"123456", imagen:"/assets/images/admin.jpeg", pos:'380px'}
   ]
   isExpanded = false;
 
@@ -89,51 +92,44 @@ export class LoginComponent {
       }
     });
     
-    const userCredential = await signInWithEmailAndPassword(this.auth, this.userMail, this.userPWD)
-    try{
-        if (userCredential.user.email !== null){
-          const userId = userCredential.user.uid;
-          const userDocRef = doc(this.firestore, `usuarios/${userId}`);
-          const userDoc = await getDoc(userDocRef);
-          const userData = userDoc.data();
-          Swal.close();
-          if((userData?.['rol'] == 'paciente' && userCredential.user.emailVerified) || (userData?.['rol'] == 'especialista' && userData?.['verificado'])||userData?.['rol'] == 'administrador'){
-            this.loggedUser = userCredential.user.email;
-            let col = collection(this.firestore, "logins");
-            addDoc(col,{fecha: new Date(), "user": this.loggedUser});
-            Swal.fire({
-            title: `Bienvenido ${userData?.['nombre']}\nFecha de ingreso: ${this.obtenerFechaActual()}`,
-            background: '#fff',
-            color: '#000',
-            confirmButtonColor: '#ff5722'
-            })
-            switch(userData?.['rol']){
-              case 'paciente':
-                console.log('Ingreso un paciente')
-                this.flagError = false;
-                this.router.navigate(['home']);
-              break;
-              case 'especialista':
-                console.log('Ingreso un especialista')
-                this.flagError = false;
-                this.router.navigate(['home']);
-              break;
-              default:
-                console.log('Ingreso un administrador')
-                this.flagError = false;
-                this.router.navigate(['home']);
-                break
-            }
+    await signInWithEmailAndPassword(this.auth, this.userMail, this.userPWD).then(async (userCredential)=>{
+      if (userCredential.user.email !== null){
+        const userId = userCredential.user.uid;
+        const userDocRef = doc(this.firestore, `usuarios/${userId}`);
+        const userDoc = await getDoc(userDocRef);
+        const userData = userDoc.data();
+        Swal.close();
+        if((userData?.['rol'] == 'paciente' && userCredential.user.emailVerified) || (userData?.['rol'] == 'especialista' && userData?.['verificado'])||userData?.['rol'] == 'administrador'){
+          this.loggedUser = userCredential.user.email;
+          let col = collection(this.firestore, "logins");
+          addDoc(col,{fecha: new Date(), "user": this.loggedUser});
+          Swal.fire({
+          title: `Bienvenido ${userData?.['nombre']}\nFecha de ingreso: ${this.obtenerFechaActual()}`,
+          background: '#fff',
+          color: '#000',
+          confirmButtonColor: '#ff5722'
+          })
+          switch(userData?.['rol']){
+            case 'paciente':
+              console.log('Ingreso un paciente')
+              this.flagError = false;
+              this.router.navigate(['home']);
+            break;
+            case 'especialista':
+              console.log('Ingreso un especialista')
+              this.flagError = false;
+              this.router.navigate(['home']);
+            break;
+            default:
+              console.log('Ingreso un administrador')
+              this.flagError = false;
+              this.router.navigate(['home']);
+              break
           }
-          else if(userData?.['rol'] == 'especialista'){
-            Swal.fire({
-              title: `El administrador aun no valido su cuenta`,
-              background: '#fff',
-              color: '#000',
-              confirmButtonColor: '#ff5722'
-            })
-          }
-          else{
+        }
+        else if(userData?.['rol'] == 'especialista'){
+          signOut(this.auth)
+          if(!userCredential.user.emailVerified){
             Swal.fire({
               title: `Email no verificado, revise su correo`,
               background: '#fff',
@@ -141,11 +137,30 @@ export class LoginComponent {
               confirmButtonColor: '#ff5722'
               })
           }
-      }
+          else{
+            signOut(this.auth)
+            Swal.fire({
+              title: `El administrador aun no valido su cuenta`,
+              background: '#fff',
+              color: '#000',
+              confirmButtonColor: '#ff5722'
+            })
+          }
+        }
+        else{
+          signOut(this.auth)
+          Swal.fire({
+            title: `Email no verificado, revise su correo`,
+            background: '#fff',
+            color: '#000',
+            confirmButtonColor: '#ff5722'
+            })
+        }
     }
-    catch{
-      (e: { code: any; }) => {
-        Swal.close();
+    })
+    .catch((e)=>{
+      signOut(this.auth)
+      Swal.close();
         this.flagError = true;
   
         console.log(e.code);
@@ -175,8 +190,7 @@ export class LoginComponent {
           color: '#000',
           confirmButtonColor: '#ff5722'
           })
-      }
-    }
+    })
   }
 
   CompletarInputs(mail:string,pass:string) {

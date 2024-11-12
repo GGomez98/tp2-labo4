@@ -1,5 +1,5 @@
 .register-container {
-    width: 700px;
+    width: 100%;
     max-height: 830px;
     padding: 10px;
     border-radius: 8px;
@@ -24,7 +24,7 @@ form{
     margin-bottom: 20px;
     text-align: left;
     height: 80px;
-    width: 100%;
+    width: 50%;
     font-size: 15px;
 }
 
@@ -36,6 +36,7 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="tel"],
 input[type="password"],
 input[type="file"]{
     width: 100%;

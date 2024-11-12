@@ -29,8 +29,8 @@
       
           <div class="form-group">
             <label for="dni">DNI</label>
-            <input type="number" id="dni" formControlName="dni" placeholder="Ingresa tu DNI">
-            <ng-container *ngIf="dni?.hasError('minLength')&&dni?.hasError('maxLength')|| dni?.invalid && formularioEnviado">
+            <input type="tel" id="dni" formControlName="dni" placeholder="Ingresa tu DNI">
+            <ng-container *ngIf="dni?.invalid && dni?.touched|| dni?.invalid && formularioEnviado">
                 <small class="text-danger">Se deben ingresar 8 digitos</small>
             </ng-container>
           </div>

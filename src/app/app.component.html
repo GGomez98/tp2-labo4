@@ -1,12 +1,23 @@
 <nav class="navbar">
     <div class="container-fluid">
-      <button class="navbar-brand" routerLink="/">
-        <img src="favicon.ico" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-        Inicio
-      </button>
-      <button class="navbar-brand" routerLink="/login">
-        Ingresar
-      </button>
+      @if(isLoggedOut()){
+        <button class="navbar-brand" routerLink="/">
+          <img src="favicon.ico" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          Inicio
+        </button>
+        <button class="navbar-brand" routerLink="/login">
+          Ingresar
+        </button>
+      }
+      @else {
+        <button class="navbar-brand" routerLink="/home">
+          <img src="favicon.ico" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          Inicio
+        </button>
+        <button class="navbar-brand" (click) ='logout()'>
+          Salir
+        </button>
+      }
     </div>
   </nav>
 <router-outlet />
