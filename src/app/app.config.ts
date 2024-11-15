@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +7,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { provideHttpClient } from '@angular/common/http';
+import {RECAPTCHA_SETTINGS, RecaptchaModule, RecaptchaSettings, ReCaptchaV3Service} from 'ng-recaptcha';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -15,5 +16,10 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()), 
     provideFirestore(() => getFirestore()), 
     provideStorage(() => getStorage()),
-    provideHttpClient()]
+    provideHttpClient(),
+    importProvidersFrom(
+      RecaptchaModule,
+      ReCaptchaV3Service
+    ),
+  {provide:RECAPTCHA_SETTINGS, useValue:{siteKey:'6LcJ_nwqAAAAAHWshJBmnD2wzXVsi4bPk2C5jIih' as RecaptchaSettings}}]
 };

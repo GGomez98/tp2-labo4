@@ -1,5 +1,6 @@
-<div class="register-container">
-    <h2>Registro de Administradores</h2>
+
+<div  class="modal-content modal-xl register-container">
+    <h2>Registro de Especialistas</h2>
     <form [formGroup]="registerForm">
       
       <div class="form-group">
@@ -30,6 +31,22 @@
         </ng-container>
       </div>
   
+      <div class="form-group especialidad">
+        <input (keydown)="handleKeyDown($event)" placeholder="Ingrese una especialidad" type="text" (focus)="handleInputFocus()" (blur)="handleInputBlur()" formControlName="especialidades"/>
+        <ul id="especialidad" *ngIf="showDropdown && especialidadesList.length">
+          <li *ngFor="let especialidad of especialidadesList" [value]="especialidad" (click)="addTagFromSelect(especialidad)">{{ especialidad }}</li>
+        </ul>
+        <div class="tags-input-container">
+          <span class="tag" *ngFor="let tag of tags; index as i">
+            {{ tag }}
+            <button class="remove-btn" (click)="removeTag(i)">x</button>
+          </span>
+        </div>
+        <ng-container *ngIf="tags.length == 0 && formularioEnviado">
+          <small class="text-danger">Ingrese por lo menos una especialidad</small>
+      </ng-container>
+      </div>
+  
       <div class="form-group">
         <input id="email" type="email" formControlName="email" placeholder="Ingresa tu correo">
         <ng-container *ngIf="email?.hasError('email')|| email?.invalid && formularioEnviado">
@@ -37,7 +54,7 @@
       </ng-container>
       </div>
   
-      <div class="form-group">
+      <div class="form-group password">
         <input id="password" type="password" formControlName="password" placeholder="Ingresa tu contraseña">
         <ng-container *ngIf="password?.hasError('minLength')||password?.invalid && formularioEnviado">
           <small class="text-danger">La contraseña debe tener como minimo 6 caracteres</small>
@@ -50,8 +67,7 @@
         <ng-container *ngIf="imagen?.errors?.['invalidImageCount'] && formularioEnviado">
           <small class="text-danger">Ingrese una imagen</small>
       </ng-container>
-      </div>
-
+    </div>
       <div class="form-group recaptcha">
         <re-captcha (resolved)="resolved($event)" siteKey="6LcJ_nwqAAAAAHWshJBmnD2wzXVsi4bPk2C5jIih" formControlName='recaptcha'></re-captcha>
         <ng-container *ngIf="recaptcha?.invalid && formularioEnviado">
@@ -59,6 +75,6 @@
         </ng-container>
       </div>
   
-      <button (click)="onSubmit()">Registrar Administrador</button>
+      <button (click)="onSubmit()">Registrarse</button>
     </form>
-  </div>
+</div>

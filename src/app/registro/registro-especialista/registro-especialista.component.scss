@@ -8,14 +8,14 @@ body {
 }
 
 .register-container {
-    width: 1200px;
-    max-height: 730px;
+    width: 100%;
+    max-height: 830px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     background-color: #ffffff;
-    margin-top: 100px;
+    margin-top: 60px;
 }
 
 h2 {
@@ -49,12 +49,16 @@ li:hover{
 .form-group {
     margin-bottom: 30px;
     text-align: left;
-    height: 80px;
+    height: 60px;
     width: 47%;
 }
 
 .especialidad{
-    height: 140px;
+    height: 90px;
+}
+
+.recaptcha{
+    margin-bottom: 60px;
 }
 
 label {
@@ -141,5 +145,5 @@ select {
 }
 
 .image-input{
-    margin-bottom: 130px;
+    margin-bottom: 30px;
 }

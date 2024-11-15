@@ -1,17 +1,22 @@
 import { Routes } from '@angular/router';
 import { BienvenidaComponent } from './components/bienvenida/bienvenida.component';
 import { LoginComponent } from './components/login/login.component';
-import { RegistroPacienteComponent } from './components/registro-paciente/registro-paciente.component';
-import { RegistroEspecialistaComponent } from './components/registro-especialista/registro-especialista.component';
 import { HomeComponent } from './components/home/home.component';
 import { GestionUsuariosComponent } from './components/gestion-usuarios/gestion-usuarios.component';
 import { authGuard } from './auth.guard';
+import { RegistroPacienteComponent } from './registro/registro-paciente/registro-paciente.component';
+import { RegistroEspecialistaComponent } from './registro/registro-especialista/registro-especialista.component';
+import { RegistroComponent } from './registro/registro.component';
+import { OpcionesRegistroComponent } from './opciones-registro/opciones-registro.component';
 
 export const routes: Routes = [
     {component:BienvenidaComponent, path:''},
     {component:LoginComponent, path:'login'},
-    {component:RegistroPacienteComponent, path:'registro-paciente'},
-    {component:RegistroEspecialistaComponent, path:'registro-especialista'},
+    {component:OpcionesRegistroComponent, path:'opciones-registro'},
+    {component:RegistroComponent, path:'registro', children:[
+        {component:RegistroPacienteComponent, path:'registro-paciente'},
+        {component:RegistroEspecialistaComponent, path:'registro-especialista'}
+    ]},
     {component:HomeComponent, path: 'home', canActivate: [authGuard]},
-    {component: GestionUsuariosComponent, path: 'gestion-usuarios', canActivate: [authGuard]}
+    {component: GestionUsuariosComponent, path: 'gestion-usuarios'}//, canActivate: [authGuard]}
 ];

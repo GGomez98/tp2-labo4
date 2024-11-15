@@ -1,28 +1,13 @@
-<header>
-    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-      <h1 class="display-4 fw-normal text-body-emphasis">Bienvenido</h1>
-      <p class="fs-5 text-body-secondary">Seleccione una opción</p>
+
+<div class="container-fluid">
+  <div class="jumbotron p-3 p-md-5 text-white rounded">
+    <div class="col-md-6 px-0 texto">
+      <h1 class="display-4 font-italic">Bienvenido al sitio web de la Clinica OnLine</h1>
+      <p class="lead my-3">Contamos 6 consultorios, 2 laboratorios fisicos y una sala de espera general. Estamos abiertos de Lunes a Viernes de 08:00hs a 19:00hs y los Sabados de 08:00hs a 14:00hs</p>
     </div>
-  </header>
-<div class="row row-cols-1 row-cols-md-3 mb-3 text-center container-fluid">
-    <div class="col">
-      <div class="card-body">
-        <button type="button" class="w-100 btn btn-lg" routerLink="registro-paciente">
-          <div class="image-button-container">
-            <img src="/assets/images/paciente.jpg">
-            <span class="overlay-text">Registrarse como paciente</span>
-          </div>
-        </button>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card-body">
-        <button type="button" class="w-100 btn btn-lg" routerLink="registro-especialista">
-          <div class="image-button-container">
-            <img src="/assets/images/doctor.jpg">
-            <span class="overlay-text">Registrarse como especialista</span>
-          </div>
-        </button>
-      </div>
+    <div class="opciones">
+      <button class="btn btn-primary" routerLink="/login">Ingresar</button>
+      <button class="btn btn-danger" routerLink="/opciones-registro">Registrarse</button>
     </div>
   </div>
+</div>

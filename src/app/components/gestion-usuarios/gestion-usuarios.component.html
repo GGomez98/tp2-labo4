@@ -1,5 +1,32 @@
 <div class="main-container">
-    <app-registro-admins></app-registro-admins>
-    <app-gestion-permisos></app-gestion-permisos>
     <app-lista-usuarios></app-lista-usuarios>
+    <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminRegister">
+    Registrar Administrador
+  </button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#especialistaRegister">
+    Registrar Especialista
+  </button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pacienteRegister">
+    Registrar Paciente
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade modal-lg" id="adminRegister" tabindex="-1" aria-labelledby="adminRegisterLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <app-registro-admins></app-registro-admins>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="especialistaRegister" tabindex="-1" aria-labelledby="especialistaRegisterLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <app-registro-especialista></app-registro-especialista>
+    </div>
+  </div>
+  <div class="modal fade" id="pacienteRegister" tabindex="-1" aria-labelledby="pacienteRegisterLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <app-registro-paciente></app-registro-paciente>
+    </div>
+  </div>
 </div>

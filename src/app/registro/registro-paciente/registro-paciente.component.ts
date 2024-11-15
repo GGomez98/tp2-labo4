@@ -4,12 +4,13 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
+import { RecaptchaModule, RecaptchaFormsModule  } from 'ng-recaptcha';
 
 
 @Component({
   selector: 'app-registro-paciente',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule,CommonModule, RecaptchaModule, RecaptchaFormsModule],
   templateUrl: './registro-paciente.component.html',
   styleUrl: './registro-paciente.component.scss'
 }) 
@@ -19,6 +20,7 @@ export class RegistroPacienteComponent {
   @ViewChild('fileInput2') fileInput2!: ElementRef;
   registroForm!: FormGroup;
   formularioEnviado: boolean = false;
+  recaptchaResponse: string | null = null;
 
   constructor(private usuarioService: UsuarioService, private auth: Auth) {}
 
@@ -32,8 +34,13 @@ export class RegistroPacienteComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required,Validators.minLength(6)]),
       imagen1: new FormControl('', [Validators.required, this.validarImagen]),
-      imagen2: new FormControl('', [Validators.required, this.validarImagen])
+      imagen2: new FormControl('', [Validators.required, this.validarImagen]),
+      recaptcha: new FormControl('', Validators.required)
     });
+  }
+
+  resolved(captchaResponse: string|null): void {
+    this.recaptchaResponse = captchaResponse;
   }
 
   validarImagen(control: AbstractControl) {
@@ -155,6 +162,9 @@ export class RegistroPacienteComponent {
   }
   get imagen2() {
     return this.registroForm.get('imagen2');
+  }
+  get recaptcha() {
+    return this.registroForm.get('recaptcha');
   }
 }
 

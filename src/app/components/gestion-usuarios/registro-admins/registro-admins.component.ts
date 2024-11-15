@@ -4,11 +4,12 @@ import { UsuarioService } from '../../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registro-admins',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RecaptchaFormsModule, RecaptchaModule],
   templateUrl: './registro-admins.component.html',
   styleUrl: './registro-admins.component.scss'
 })
@@ -16,6 +17,7 @@ export class RegistroAdminsComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
   registerForm!: FormGroup;
   formularioEnviado: boolean = false;
+  recaptchaResponse: string | null = null;
 
   constructor(private usuarioService: UsuarioService, private auth: Auth) {}
 
@@ -28,7 +30,12 @@ export class RegistroAdminsComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required,Validators.minLength(6)]),
       imagen: new FormControl('', [Validators.required, this.validarImagen]),
+      recaptcha: new FormControl('', Validators.required)
     });
+  }
+
+  resolved(captchaResponse: string|null): void {
+    this.recaptchaResponse = captchaResponse;
   }
 
   validarImagen(control: AbstractControl) {
@@ -155,5 +162,8 @@ export class RegistroAdminsComponent {
   }
   get imagen() {
     return this.registerForm.get('imagen');
+  }
+  get recaptcha() {
+    return this.registerForm.get('recaptcha');
   }
 }

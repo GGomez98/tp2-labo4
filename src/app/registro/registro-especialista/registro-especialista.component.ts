@@ -3,11 +3,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
+import { RecaptchaModule, RecaptchaFormsModule  } from 'ng-recaptcha';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RecaptchaFormsModule, RecaptchaModule],
   templateUrl: './registro-especialista.component.html',
   styleUrl: './registro-especialista.component.scss'
 })
@@ -18,6 +19,7 @@ export class RegistroEspecialistaComponent {
   formularioEnviado: boolean = false;
   tags: string[] = [];
   showDropdown: boolean = false;
+  recaptchaResponse: string | null = null;
 
   constructor(private usuarioService: UsuarioService, private auth: Auth) {}
 
@@ -31,7 +33,12 @@ export class RegistroEspecialistaComponent {
       especialidades: new FormControl(''),
       password: new FormControl('', [Validators.required,Validators.minLength(6)]),
       imagen: new FormControl('', [Validators.required, this.validarImagen]),
+      recaptcha: new FormControl('', Validators.required)
     });
+  }
+
+  resolved(captchaResponse: string|null): void {
+    this.recaptchaResponse = captchaResponse;
   }
 
   addTag() {
@@ -204,5 +211,8 @@ export class RegistroEspecialistaComponent {
   }
   get imagen() {
     return this.registerForm.get('imagen');
+  }
+  get recaptcha() {
+    return this.registerForm.get('recaptcha');
   }
 }

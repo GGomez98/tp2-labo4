@@ -1,29 +1,106 @@
 <div class="card">
     @if(usuariosCargados){
     <h2>Lista de Usuarios</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Edad</th>
-            <th scope="col">DNI</th>
-            <th scope="col">Email</th>
-            <th scope="col">Rol</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let usuario of usuarios">
-            <td>{{usuario.nombre}}</td>
-            <td>{{usuario.apellido}}</td>
-            <td>{{usuario.edad}}</td>
-            <td>{{usuario.dni}}</td>
-            <td>{{usuario.email}}</td>
-            <td>{{usuario.rol}}</td>
-          </tr>
-        </tbody>
-      </table>  
-    }@else{
+      <nav>
+        <button (click)="obtenerUsuarios('')" class="lista active" #pacientesBtn>Pacientes</button>
+        <button (click)="obtenerUsuarios('especialistas')" class="lista" #especialistasBtn>Especialistas</button>
+        <button (click)="obtenerUsuarios('administradores')" class="lista" #administradoresBtn>Administradores</button>
+      </nav>
+      @if(listaAdministradores){
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Edad</th>
+              <th scope="col">DNI</th>
+              <th scope="col">Email</th>
+              <th scope="col">Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios">
+              <td><img [src]="usuario.imagen"></td>
+              <td>{{usuario.nombre}}</td>
+              <td>{{usuario.apellido}}</td>
+              <td>{{usuario.edad}}</td>
+              <td>{{usuario.dni}}</td>
+              <td>{{usuario.email}}</td>
+              <td>{{usuario.rol}}</td>
+            </tr>
+          </tbody>
+        </table>
+      }
+      @else if(listaEspecialistas){
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Edad</th>
+              <th scope="col">DNI</th>
+              <th scope="col">Email</th>
+              <th scope="col">Especialidades</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Inhabilitado/Habilitado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios">
+              <td><img [src]="usuario.imagen"></td>
+              <td>{{usuario.nombre}}</td>
+              <td>{{usuario.apellido}}</td>
+              <td>{{usuario.edad}}</td>
+              <td>{{usuario.dni}}</td>
+              <td>{{usuario.email}}</td>
+              <td>{{usuario.especialidades}}</td>
+              <td>{{usuario.rol}}</td>
+              <td>
+                <div class="form-check form-switch">
+                  @if(usuario.verificado){
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked (click)="cambiarEstadoEspecialista(usuario, false)">
+                  }
+                  @else {
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (click)="cambiarEstadoEspecialista(usuario, true)">
+                  }
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      }
+      @else{
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Edad</th>
+              <th scope="col">DNI</th>
+              <th scope="col">Email</th>
+              <th scope="col">Obra Social</th>
+              <th scope="col">Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios">
+              <td><img [src]="usuario.imagen1"></td>
+              <td>{{usuario.nombre}}</td>
+              <td>{{usuario.apellido}}</td>
+              <td>{{usuario.edad}}</td>
+              <td>{{usuario.dni}}</td>
+              <td>{{usuario.email}}</td>
+              <td>{{usuario.obraSocial}}</td>
+              <td>{{usuario.rol}}</td>
+            </tr>
+          </tbody>
+        </table>
+      }
+    }
+    @else{
       <div class="d-flex justify-content-center">
         <div class="spinner-border text-info" role="status">
           <span class="visually-hidden">Loading...</span>

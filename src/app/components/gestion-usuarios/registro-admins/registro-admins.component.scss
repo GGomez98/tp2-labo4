@@ -23,9 +23,13 @@ form{
 .form-group {
     margin-bottom: 20px;
     text-align: left;
-    height: 80px;
+    height: 60px;
     width: 50%;
     font-size: 15px;
+}
+
+.recaptcha{
+    height: 90px;
 }
 
 label {

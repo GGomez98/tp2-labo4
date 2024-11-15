@@ -1,15 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { RegistroAdminsComponent } from './registro-admins/registro-admins.component';
-import { GestionPermisosComponent } from './gestion-permisos/gestion-permisos.component';
 import { ListaUsuariosComponent } from "./lista-usuarios/lista-usuarios.component";
+import { Modal } from 'bootstrap';
+import { RegistroEspecialistaComponent } from '../../registro/registro-especialista/registro-especialista.component';
+import { RegistroPacienteComponent } from '../../registro/registro-paciente/registro-paciente.component';
 
 @Component({
   selector: 'app-gestion-usuarios',
   standalone: true,
-  imports: [RegistroAdminsComponent, GestionPermisosComponent, ListaUsuariosComponent],
+  imports: [RegistroAdminsComponent, ListaUsuariosComponent, RegistroEspecialistaComponent, RegistroPacienteComponent ],
   templateUrl: './gestion-usuarios.component.html',
   styleUrl: './gestion-usuarios.component.scss'
 })
 export class GestionUsuariosComponent {
+  modal: Modal | undefined;
 
+  ngAfterViewInit() {
+    const modalElement = document.getElementById('miModal');
+    if (modalElement) {
+      this.modal = new Modal(modalElement);
+    }
+  }
+
+  openModal() {
+    this.modal?.show();
+  }
+
+  closeModal() {
+    this.modal?.hide();
+  }
 }

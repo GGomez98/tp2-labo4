@@ -1,0 +1,75 @@
+
+<div class="modal-content modal-xl register-container">
+    <h2>Registro de Pacientes</h2>
+    <form [formGroup]="registroForm">
+      
+      <div class="form-group">
+        <input type="text" id="nombre" formControlName="nombre" placeholder="Ingresa tu nombre">
+        <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
+            <small class="text-danger">Sólo debe contener letras</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="text" id="apellido" formControlName="apellido" placeholder="Ingresa tu apellido">
+        <ng-container *ngIf="apellido?.hasError('pattern')|| apellido?.invalid && formularioEnviado">
+            <small class="text-danger">Sólo debe contener letras</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="number" id="edad" formControlName="edad" placeholder="Ingresa tu edad">
+        <ng-container *ngIf="(edad?.hasError('min')||edad?.hasError('max'))|| edad?.invalid && formularioEnviado">
+            <small class="text-danger">La edad debe ser entre 0 y 99</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="tel" id="dni" formControlName="dni" placeholder="Ingresa tu DNI">
+        <ng-container *ngIf="dni?.invalid && dni?.touched|| dni?.invalid && formularioEnviado">
+            <small class="text-danger">Se deben ingresar 8 digitos</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="text" id="obra-social" formControlName="obraSocial" placeholder="Ingresa tu obra social">
+        <ng-container *ngIf="obraSocial?.invalid && formularioEnviado">
+            <small class="text-danger">Este campo es requerido</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="email" id="email" formControlName="email" placeholder="Ingresa tu correo">
+        <ng-container *ngIf="email?.hasError('email')|| email?.invalid && formularioEnviado">
+            <small class="text-danger">Formato de email invalido</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group">
+        <input type="password" id="password" formControlName="password" placeholder="Ingresa tu contraseña">
+        <ng-container *ngIf="password?.hasError('minLength')||password?.invalid && formularioEnviado">
+            <small class="text-danger">La contraseña debe tener como minimo 6 caracteres</small>
+        </ng-container>
+      </div>
+  
+      <div class="form-group images">
+        <label for="imagenes">Sube tus imágenes</label>
+        <input #fileInput1 type="file" id="imagen1" (change)="onFileChange($event, 'imagen1')" accept="image/*" >
+        <ng-container *ngIf="imagen1?.errors?.['invalidImageCount'] && formularioEnviado">
+            <small class="text-danger">Ingrese una imagen</small>
+        </ng-container>
+        <input #fileInput2 type="file" id="imagen2" (change)="onFileChange($event, 'imagen2')" accept="image/*">
+        <ng-container *ngIf="imagen2?.errors?.['invalidImageCount'] && formularioEnviado">
+            <small class="text-danger">Ingrese una imagen</small>
+        </ng-container>
+      </div>
+      <div class="form-group recaptcha">
+        <re-captcha (resolved)="resolved($event)" siteKey="6LcJ_nwqAAAAAHWshJBmnD2wzXVsi4bPk2C5jIih" formControlName='recaptcha'></re-captcha>
+        <ng-container *ngIf="recaptcha?.invalid && formularioEnviado">
+          <small class="text-danger">Complete el recaptcha</small>
+        </ng-container>
+      </div>
+  
+      <button (click)="onSubmit()">Registrarse</button>
+    </form>
+  </div>
