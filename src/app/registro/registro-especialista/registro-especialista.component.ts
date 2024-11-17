@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithCredential, signInWithCustomToken, signInWithEmailAndPassword, signOut, updateCurrentUser, User } from '@angular/fire/auth';
 import { RecaptchaModule, RecaptchaFormsModule  } from 'ng-recaptcha';
 import Swal from 'sweetalert2';
+import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
@@ -21,7 +22,7 @@ export class RegistroEspecialistaComponent {
   showDropdown: boolean = false;
   recaptchaResponse: string | null = null;
 
-  constructor(private usuarioService: UsuarioService, private auth: Auth) {}
+  constructor(private usuarioService: UsuarioService, private auth: Auth, private firestore: Firestore) {}
 
   ngOnInit(){
     this.registerForm = new FormGroup({
@@ -113,12 +114,24 @@ export class RegistroEspecialistaComponent {
         verificado: false,
         rol:'especialista'
       };
+
+      const userDocRef = doc(this.firestore, `usuarios/${this.auth.currentUser?.uid}`);
+      const userDoc = await getDoc(userDocRef);
+      const usuarioAdministrador = userDoc.data();
+      const usuarioAdministradorCredentials = this.auth.currentUser
       
         createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async(res)=>{
           if(res.user.email!=null)
             await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
+            await this.CargarHorariosPorDefecto();
             sendEmailVerification(this.auth.currentUser as User)
-            signOut(this.auth);
+            console.log(usuarioAdministrador?.['rol'])
+            if(usuarioAdministrador?.['rol'] == 'administrador'){
+              updateCurrentUser(this.auth, usuarioAdministradorCredentials)
+            }
+            else{
+              signOut(this.auth);
+            }
             Swal.fire({
               title: `El usuario fue creado exitosamente, enviamos un mail a su correo electronico para la verificacion`,
               background: '#fff',
@@ -186,6 +199,35 @@ export class RegistroEspecialistaComponent {
       this.registerForm.get(controlName)?.setValue([]);
       this.registerForm.get(controlName)?.updateValueAndValidity();
     }
+  }
+
+  async CargarHorariosPorDefecto(){
+    const userId = this.auth.currentUser?.uid;
+    const userDocRef = doc(this.firestore, `usuarios/${userId}`);
+    const userDoc = await getDoc(userDocRef);
+    const userData = userDoc.data();
+    userData?.['especialidades'].forEach(async (especialidad: any) => {
+      const horarioData = {
+        especialistaId: this.auth.currentUser?.uid,
+        especialidad: especialidad,
+        horarios:[
+          {dia:'lunes',horaInicio:"08:00",horaFin:"19:00"},
+          {dia:'martes',horaInicio:"08:00",horaFin:"19:00"},
+          {dia:'miercoles',horaInicio:"08:00",horaFin:"19:00"},
+          {dia:'jueves',horaInicio:"08:00",horaFin:"19:00"},
+          {dia:'viernes',horaInicio:"08:00",horaFin:"19:00"},
+          {dia:'sabado',horaInicio:"08:00",horaFin:"14:00"}
+        ],
+        minutosTurno: 30
+      }
+      try {
+        const horarioDocRef = collection(this.firestore, `horariosAtencion`);
+        await addDoc(horarioDocRef, horarioData);
+        console.log('Los horarios del usuario se registraron con exito');
+      } catch (error) {
+        console.error('Error al registrar los horarios del usuario:', error);
+      }
+    });
   }
 
   get nombre() {

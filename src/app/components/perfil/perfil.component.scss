@@ -1,0 +1,28 @@
+.main-container{
+    background-image:url("/assets/images/hospital.jpg");
+    background-size: cover;
+    justify-content: center;
+    min-height: 94.5vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.row{
+    width: 100%;
+}
+
+.profile{
+    height: 50vh;
+    .card-body{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        border-radius: 5px;
+        background-size: cover;
+        background-position: center;
+        img{
+            width: 50%;
+        }
+    }
+}

@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, User } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, updateCurrentUser, User } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { RecaptchaModule, RecaptchaFormsModule  } from 'ng-recaptcha';
+import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class RegistroPacienteComponent {
   formularioEnviado: boolean = false;
   recaptchaResponse: string | null = null;
 
-  constructor(private usuarioService: UsuarioService, private auth: Auth) {}
+  constructor(private usuarioService: UsuarioService, private auth: Auth, private firestore: Firestore) {}
 
   ngOnInit(){
     this.registroForm = new FormGroup({
@@ -78,10 +79,23 @@ export class RegistroPacienteComponent {
         imagen2: this.registroForm.value.imagen2,
         rol:'paciente'
       };
-        createUserWithEmailAndPassword(this.auth,userData.email,this.registroForm.value.password).then(async ()=>{
+      const userDocRef = doc(this.firestore, `usuarios/${this.auth.currentUser?.uid}`);
+      const userDoc = await getDoc(userDocRef);
+      const usuarioAdministrador = userDoc.data();
+      const usuarioAdministradorCredentials = this.auth.currentUser
+      
+        createUserWithEmailAndPassword(this.auth,userData.email,this.registroForm.value.password).then(async(res)=>{
+          if(res.user.email!=null)
             await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
             sendEmailVerification(this.auth.currentUser as User)
-            signOut(this.auth);
+            console.log(usuarioAdministrador?.['rol'])
+            if(usuarioAdministrador?.['rol'] == 'administrador'){
+              updateCurrentUser(this.auth, usuarioAdministradorCredentials)
+              console.log('El usuario permanece logueado')
+            }
+            else{
+              signOut(this.auth);
+            }
             Swal.fire({
               title: `El usuario fue creado exitosamente, enviamos un mail a su correo electronico para la verificacion`,
               background: '#fff',

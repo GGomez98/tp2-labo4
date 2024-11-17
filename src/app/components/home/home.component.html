@@ -1,14 +1,25 @@
 <div class="main-container">
     <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 box-shadow">
+        @if(userData['rol']=='paciente'){
+          <div class="card-body perfil" [style.background-image] = "'url('+userData['imagen1']+')'">
+            <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/perfil">Mi Perfil</button>
+          </div>
+        }
+        @else {
+          <div class="card-body perfil" [style.background-image] = "'url('+userData['imagen']+')'">
+            <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/perfil">Mi Perfil</button>
+          </div>
+        }
+      </div>
       @if(userData['rol']=='administrador'){
         <div class="card mb-4 box-shadow">
-          <div class="card-body">
+          <div class="card-body permisos">
             <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/gestion-usuarios">Permisos y Administracion</button>
           </div>
         </div>
       }
       @else {
-        <p>Otro panel</p>
       }
       </div>
 </div>

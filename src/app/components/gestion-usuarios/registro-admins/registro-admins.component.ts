@@ -1,10 +1,11 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../../servicios/usuario/usuario.service';
-import { Auth, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signOut, updateCurrentUser } from '@angular/fire/auth';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registro-admins',
@@ -19,7 +20,7 @@ export class RegistroAdminsComponent {
   formularioEnviado: boolean = false;
   recaptchaResponse: string | null = null;
 
-  constructor(private usuarioService: UsuarioService, private auth: Auth) {}
+  constructor(private usuarioService: UsuarioService, private auth: Auth, private firestore: Firestore) {}
 
   ngOnInit(){
     this.registerForm = new FormGroup({
@@ -71,9 +72,17 @@ export class RegistroAdminsComponent {
         imagen: this.registerForm.value.imagen,
         rol:'administrador'
       };
-        createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async ()=>{
-          await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
-          signOut(this.auth);
+      const userDocRef = doc(this.firestore, `usuarios/${this.auth.currentUser?.uid}`);
+      const userDoc = await getDoc(userDocRef);
+      const usuarioAdministrador = userDoc.data();
+      const usuarioAdministradorCredentials = this.auth.currentUser
+      
+        createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async(res)=>{
+          if(res.user.email!=null)
+            await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
+            console.log(usuarioAdministrador?.['rol'])
+            updateCurrentUser(this.auth, usuarioAdministradorCredentials)
+            
           Swal.fire({
             title: `El usuario fue creado exitosamente`,
             background: '#fff',

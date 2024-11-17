@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
-import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { Auth, sendEmailVerification, signInWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import { addDoc, collection, doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2'
@@ -99,7 +99,7 @@ export class LoginComponent {
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
         Swal.close();
-        if((userData?.['rol'] == 'paciente' && userCredential.user.emailVerified) || (userData?.['rol'] == 'especialista' && userData?.['verificado'])||userData?.['rol'] == 'administrador'){
+        if((userData?.['rol'] == 'paciente' && userCredential.user.emailVerified) || (userData?.['rol'] == 'especialista' && userData?.['verificado'] && userCredential.user.emailVerified)||userData?.['rol'] == 'administrador'){
           this.loggedUser = userCredential.user.email;
           let col = collection(this.firestore, "logins");
           addDoc(col,{fecha: new Date(), "user": this.loggedUser});
