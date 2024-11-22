@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ComponentRef, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { collection, doc, Firestore, getDoc, onSnapshot } from '@angular/fire/firestore';
-import Modal from 'bootstrap/js/dist/modal';
+import { collection, doc, docData, Firestore, getDoc, onSnapshot } from '@angular/fire/firestore';
 import { FormHorariosComponent } from './form-horarios/form-horarios.component';
 
 @Component({
@@ -13,6 +12,7 @@ import { FormHorariosComponent } from './form-horarios/form-horarios.component';
   styleUrl: './perfil.component.scss'
 })
 export class PerfilComponent {
+  @ViewChild("modal") modal!: ElementRef;
   userData: any;
   horarios: any;
   horariosCargados: boolean = false;
@@ -35,9 +35,8 @@ export class PerfilComponent {
 
         querySnapshot.forEach((doc) => {
           const horario = doc.data();
-          console.log(this.auth.currentUser?.uid)
-          console.log(horario['especialistaId'])
           if(this.auth.currentUser?.uid == horario['especialistaId']){
+            horario['id'] = doc.id
             this.horarios.push(horario);
           }
         });

@@ -75,27 +75,15 @@
         </div>
         </div>
 
-        @if(userData['rol']=='especialista'){
-            <div class="col-lg-9">
-                <div class="card mb-4 profile">
-                    <h1>Horarios de Atencion</h1>
-                  <div class="card-body">
-                    <div class="row" *ngFor="let especialidad of userData['especialidades']">
-                      <h2>{{especialidad}}</h2>
-                      <p>{{especialidad['minutosTurno']}}</p>
-                      <div class="dias" *ngFor="let horario of horarios">
-                        <div *ngIf="especialidad == horario['especialidad']">
-                            <p *ngFor="let horarioDia of horario['horarios']">
-                                {{horarioDia['dia']}} de {{horarioDia['horaInicio']}} a {{horarioDia['horaFin']}}
-                            </p>
-                        </div>
-                      </div>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal">Editar horarios</button>
-                    </div>
-                    <hr>
-                  </div>
+        @if(userData['rol']=='especialista' && horariosCargados){
+          <div class="col-lg-9">
+            <div class="card mb-4 profile">
+              <div *ngFor="let especialidad of userData.especialidades">
+                <h1>{{especialidad}}</h1>
+                <app-form-horarios [horarioEspecialidad] = "especialidad" [listaHorarios] = "horarios"></app-form-horarios>
+              </div>
             </div>
-        </div>
+          </div>
         }
     </div>
 </div>

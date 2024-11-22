@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signInWithCredential, signInWithCustomToken, signInWithEmailAndPassword, signOut, updateCurrentUser, User } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, signOut, updateCurrentUser, User } from '@angular/fire/auth';
 import { RecaptchaModule, RecaptchaFormsModule  } from 'ng-recaptcha';
 import Swal from 'sweetalert2';
 import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
@@ -123,7 +123,6 @@ export class RegistroEspecialistaComponent {
         createUserWithEmailAndPassword(this.auth,userData.email,this.registerForm.value.password).then(async(res)=>{
           if(res.user.email!=null)
             await this.usuarioService.registrarUsuarios(this.auth.currentUser?.uid as string,userData);
-            await this.CargarHorariosPorDefecto();
             sendEmailVerification(this.auth.currentUser as User)
             console.log(usuarioAdministrador?.['rol'])
             if(usuarioAdministrador?.['rol'] == 'administrador'){
@@ -199,35 +198,6 @@ export class RegistroEspecialistaComponent {
       this.registerForm.get(controlName)?.setValue([]);
       this.registerForm.get(controlName)?.updateValueAndValidity();
     }
-  }
-
-  async CargarHorariosPorDefecto(){
-    const userId = this.auth.currentUser?.uid;
-    const userDocRef = doc(this.firestore, `usuarios/${userId}`);
-    const userDoc = await getDoc(userDocRef);
-    const userData = userDoc.data();
-    userData?.['especialidades'].forEach(async (especialidad: any) => {
-      const horarioData = {
-        especialistaId: this.auth.currentUser?.uid,
-        especialidad: especialidad,
-        horarios:[
-          {dia:'lunes',horaInicio:"08:00",horaFin:"19:00"},
-          {dia:'martes',horaInicio:"08:00",horaFin:"19:00"},
-          {dia:'miercoles',horaInicio:"08:00",horaFin:"19:00"},
-          {dia:'jueves',horaInicio:"08:00",horaFin:"19:00"},
-          {dia:'viernes',horaInicio:"08:00",horaFin:"19:00"},
-          {dia:'sabado',horaInicio:"08:00",horaFin:"14:00"}
-        ],
-        minutosTurno: 30
-      }
-      try {
-        const horarioDocRef = collection(this.firestore, `horariosAtencion`);
-        await addDoc(horarioDocRef, horarioData);
-        console.log('Los horarios del usuario se registraron con exito');
-      } catch (error) {
-        console.error('Error al registrar los horarios del usuario:', error);
-      }
-    });
   }
 
   get nombre() {

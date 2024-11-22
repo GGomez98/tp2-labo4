@@ -1,53 +1,33 @@
-<div  class="modal-content modal-xl register-container">
-    <h2>Registro de Especialistas</h2>
-    <form [formGroup]="registerForm">
-
+<div class="modal-content modal-xl register-container">
+    <form [formGroup]="form">
+      <div *ngFor="let dia of dias" class="form-group">
+        <input [id]="dia" type="checkbox" [formControlName]="dia">
+        <label [for]="dia">{{ dia | titlecase }}</label>
+    
+        <label [for]="'inicio' + dia">Desde:</label>
+        <input type="number" [id]="'inicio' + dia" [formControlName]="'inicio' + dia">
+    
+        <label [for]="'fin' + dia">Hasta:</label>
+        <input type="number" [id]="'fin' + dia" [formControlName]="'fin' + dia">
+      </div>
       <div class="form-group">
+        <label for="minutos">Tiempo de turno</label>
         <select id="minutos" formControlName="minutos">
             <option value="30">30</option>
-            <option value="30">60</option>
+            <option value="60">60</option>
         </select>
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
       </div>
-      <div class="form-group">
-        <input id="lunes" type="checkbox" formControlName="lunes">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
-      </div>
-      <div class="form-group">
-        <input id="martes" type="checkbox" formControlName="martes">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
-      </div>
-      <div class="form-group">
-        <input id="miercoles" type="checkbox" formControlName="miercoles">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
-      </div>
-      <div class="form-group">
-        <input id="jueves" type="checkbox" formControlName="jueves">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
-      </div>
-      <div class="form-group">
-        <input id="viernes" type="checkbox" formControlName="viernes">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
-      </div>
-      <div class="form-group">
-        <input id="sabado" type="checkbox" formControlName="sabado">
-        <!-- <ng-container *ngIf="nombre?.hasError('pattern')|| nombre?.invalid && formularioEnviado">
-          <small class="text-danger">Sólo debe contener letras</small>
-        </ng-container> -->
+
+      <div *ngIf="form.errors?.['incompleteSchedule'] && formularioEnviado" class="error">
+        <small class="text-danger" *ngFor="let error of form.errors?.['incompleteSchedule']">{{ error}}</small><br>
+      </div> 
+      <div *ngIf="minutos?.invalid && formularioEnviado" class="error">
+        <small class="text-danger" >Ingrese el tiempo de la consulta</small><br>
+      </div> 
+      <div *ngIf="form.errors?.['sinDiasSeleccionados'] && formularioEnviado" class="error">
+        <small class="text-danger" >{{form.errors?.['sinDiasSeleccionados']}}</small><br>
       </div>
   
-      <button>Registrarse</button>
+      <button (click) = "CargarHorariosPorEspecialidad()">Guardar horarios</button>
     </form>
 </div>
