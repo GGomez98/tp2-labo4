@@ -12,22 +12,17 @@
           </div>
         }
       </div>
-      @if(userData['rol']=='administrador'){
-        <div class="card mb-4 box-shadow">
-          <div class="card-body permisos">
-            <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/gestion-usuarios">Permisos y Administracion</button>
+      @if(userData['rol']=='paciente' || userData['rol']=='administrador'){
+        @if(userData['rol']=='administrador'){
+          <div class="card mb-4 box-shadow">
+            <div class="card-body permisos">
+              <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/gestion-usuarios">Permisos y Administracion</button>
+            </div>
           </div>
-        </div>
+        }
         <div class="card mb-4 box-shadow">
           <div class="card-body solicitar-turnos">
-            <button type="button" class="btn btn-lg btn-block btn-primary">Solicitar Turnos</button>
-          </div>
-        </div>
-      }
-      @else if(userData['rol']=='paciente'){
-        <div class="card mb-4 box-shadow">
-          <div class="card-body solicitar-turnos">
-            <button type="button" class="btn btn-lg btn-block btn-primary">Solicitar Turnos</button>
+            <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/solicitar-turno">Solicitar Turnos</button>
           </div>
         </div>
       }

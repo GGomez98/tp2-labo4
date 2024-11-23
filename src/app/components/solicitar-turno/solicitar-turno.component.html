@@ -1,1 +1,56 @@
-<p>solicitar-turno works!</p>
+<div class="main-container">
+    <div class="pasos">
+        <div class="especialistas">
+            @if(especialistasCargados){
+                <h2>Seleccione un especialista</h2>
+                <button *ngFor="let especialista of especialistas" class="card" (click)="seleccionarEspecialista(especialista)">
+                    <img [src]="especialista.imagen" class="card-img-top">
+                    <h3 class="card-title">{{especialista.nombre}} {{especialista.apellido}}</h3>
+                </button>
+            }
+            @else{
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+        </div>
+        @if(especialistaFueSeleccionado){
+            <div class="especialidades">
+                @if(especialistasCargados){
+                    <h2>Seleccione una especialidad</h2>
+                    <button *ngFor="let especialidad of especialistaSeleccionado['especialidades']" class="card" (click)="seleccionarEspecialidad(especialidad)">
+                        <!-- <img [src]="especialidad.imagen" class="card-img-top"> -->
+                        <h3 class="card-title">{{especialidad}}</h3>
+                    </button>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        @if(especialidadFueSeleccionada){
+            <div class="dias">
+                @if(horariosEspecialidadCargados){
+                    <h2>Seleccione un dia</h2>
+                    <button *ngFor="let dia of diasDisponibles" class="card">
+                        <!-- <img [src]="especialidad.imagen" class="card-img-top"> -->
+                        <h3 class="card-title">{{dia}}</h3>
+                    </button>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
