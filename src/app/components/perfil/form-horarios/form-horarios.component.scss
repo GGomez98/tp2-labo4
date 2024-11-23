@@ -1,7 +1,36 @@
+.modal-content{
+    padding: 3%;
+}
+
 .form-group{
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
+    label{
+        text-align: start;
+        min-width: 7%;
+        margin-left: 10%;
+        margin-bottom: 1%;
+    }
+    .dia, .minutos{
+        margin-left: 0;
+    }
+    .minutos{
+        margin-right: 10%;
+    }
+    input{
+        width: 15%;
+    }
+    select{
+        width: 5%;
+    }
+    input[type="checkbox"]{
+        width: 5%;
+    }
+}
+
+.form-group.tiempo{
+    justify-content: start;
 }
 
 .error{

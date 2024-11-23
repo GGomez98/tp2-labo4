@@ -76,10 +76,11 @@
         </div>
 
         @if(userData['rol']=='especialista' && horariosCargados){
-          <div class="col-lg-9">
+          <div class="col-lg">
             <div class="card mb-4 profile">
+              <h1>Horarios</h1>
               <div *ngFor="let especialidad of userData.especialidades">
-                <h1>{{especialidad}}</h1>
+                <h2>{{especialidad}}</h2>
                 <app-form-horarios [horarioEspecialidad] = "especialidad" [listaHorarios] = "horarios"></app-form-horarios>
               </div>
             </div>

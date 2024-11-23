@@ -4,6 +4,7 @@ import { Auth } from '@angular/fire/auth';
 import { addDoc, collection, doc, Firestore, getDoc, onSnapshot, setDoc } from '@angular/fire/firestore';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-horarios',
@@ -20,6 +21,7 @@ export class FormHorariosComponent implements OnInit{
   dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
   horariosCargados = false;
   formularioEnviado = false;
+  envioExitoso = false;
 
   constructor(private auth: Auth, private firestore: Firestore){}
 
@@ -45,7 +47,7 @@ export class FormHorariosComponent implements OnInit{
       iniciosabado: new FormControl({ value: '', disabled: true }),
       finsabado: new FormControl({ value: '', disabled: true })
     }, { 
-      validators: [this.validateDias, this.validateAlMenosUnDiaSeleccionado] 
+      validators: [this.validateDias, this.validateAlMenosUnDiaSeleccionado, this.validateHorarios, this.validateRangoHorario] 
     });
 
       this.dias.forEach((dia) => {
@@ -65,6 +67,71 @@ export class FormHorariosComponent implements OnInit{
 
       this.actualizarMinutos(this.dias);
       this.cargarFormulario();
+
+      this.form.valueChanges.subscribe(()=>{
+        this.envioExitoso = false;
+      })
+  }
+
+  validateRangoHorario(control: AbstractControl): ValidationErrors | null{
+    const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
+    let rangoNoValido = [];
+
+    for (const dia of dias) {
+      const diaControl = control.get(dia);
+      const startControl = control.get(`inicio${dia}`);
+      const endControl = control.get(`fin${dia}`);
+
+      if (diaControl?.value) {
+        if (startControl?.value > endControl?.value -1) {
+          rangoNoValido.push(`El horario de inicio de ${dia} es mayor o igual al horario de fin`)
+        }
+      }
+    }
+
+    if(rangoNoValido.length == 0){
+      return null;
+    }
+    else{
+      return {rangoNoValido}
+    }
+  }
+
+  validateHorarios(control: AbstractControl): ValidationErrors | null {
+    const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
+    let horarioFueraDeRango = []
+
+    for (const dia of dias) {
+      const diaControl = control.get(dia);
+      const startControl = control.get(`inicio${dia}`);
+      const endControl = control.get(`fin${dia}`);
+  
+      if (diaControl?.value) {
+        if(dia == 'sabado'){
+          if (startControl?.value < 8 || startControl?.value > 13) {
+            horarioFueraDeRango.push(`El horario de inicio de ${dia} tiene que ser entre las 8 y las 13`)
+          }
+          else if(endControl?.value < 9 || endControl?.value > 14){
+            horarioFueraDeRango.push(`El horario de fin de ${dia} tiene que ser entre las 9 y las 14`)
+          }
+        }
+        else{
+          if (startControl?.value < 8 || startControl?.value > 18) {
+            horarioFueraDeRango.push(`El horario de inicio de ${dia} tiene que ser entre las 8 y las 18`)
+          }
+          else if(endControl?.value < 9 || endControl?.value > 19){
+            horarioFueraDeRango.push(`El horario de fin de ${dia} tiene que ser entre las 9 y las 19`)
+          }
+        }
+      }
+    }
+
+    if(horarioFueraDeRango.length == 0){
+      return null;
+    }
+    else{
+      return {horarioFueraDeRango}
+    }
   }
 
   validateDias(control: AbstractControl): ValidationErrors | null {
@@ -163,12 +230,28 @@ export class FormHorariosComponent implements OnInit{
     }
 
     if(this.form.valid){
+      Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
+        background: '#fff',
+        color: '#000',
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       try {
         for(let horario of this.listaHorarios){
           if(horario.especialidad == this.horarioEspecialidad && horario.especialistaId == this.auth.currentUser?.uid){
             const horarioDocRef = doc(this.firestore, `horariosAtencion/${horario.id}`);
             await setDoc(horarioDocRef, horarioData);
             horarioExiste = true;
+            Swal.fire({
+              title: `Se editaron los horarios de la especialidad`,
+              background: '#fff',
+              color: '#000',
+              confirmButtonColor: '#ff5722'
+            })
             console.log('Se editaron los horarios de la especialidad');
           }
         }
@@ -176,9 +259,15 @@ export class FormHorariosComponent implements OnInit{
         if(!horarioExiste){
           const horarioDocRef = collection(this.firestore, `horariosAtencion`);
           await addDoc(horarioDocRef, horarioData);
+          Swal.fire({
+            title: `Se cargaron los horarios de la especialidad`,
+            background: '#fff',
+            color: '#000',
+            confirmButtonColor: '#ff5722'
+          })
           console.log('Se cargaron los horarios de la especialidad');
         }
-  
+        this.envioExitoso = true
         this.formularioEnviado = false
       } catch (error) {
         console.error('Error al registrar los horarios del usuario:', error);

@@ -1,8 +1,8 @@
-<div class="modal-content modal-xl register-container">
+<div class="modal-content modal-xl register-container container-fluid">
     <form [formGroup]="form">
       <div *ngFor="let dia of dias" class="form-group">
         <input [id]="dia" type="checkbox" [formControlName]="dia">
-        <label [for]="dia">{{ dia | titlecase }}</label>
+        <label [for]="dia" class="dia">{{ dia | titlecase }}</label>
     
         <label [for]="'inicio' + dia">Desde:</label>
         <input type="number" [id]="'inicio' + dia" [formControlName]="'inicio' + dia">
@@ -10,8 +10,8 @@
         <label [for]="'fin' + dia">Hasta:</label>
         <input type="number" [id]="'fin' + dia" [formControlName]="'fin' + dia">
       </div>
-      <div class="form-group">
-        <label for="minutos">Tiempo de turno</label>
+      <div class="form-group tiempo">
+        <label for="minutos" class="minutos">Tiempo de turno</label>
         <select id="minutos" formControlName="minutos">
             <option value="30">30</option>
             <option value="60">60</option>
@@ -21,6 +21,12 @@
       <div *ngIf="form.errors?.['incompleteSchedule'] && formularioEnviado" class="error">
         <small class="text-danger" *ngFor="let error of form.errors?.['incompleteSchedule']">{{ error}}</small><br>
       </div> 
+      <div *ngIf="form.errors?.['horarioFueraDeRango'] && formularioEnviado" class="error">
+        <small class="text-danger" *ngFor="let error of form.errors?.['horarioFueraDeRango']">{{ error}}</small><br>
+      </div> 
+      <div *ngIf="form.errors?.['rangoNoValido'] && formularioEnviado" class="error">
+        <small class="text-danger" *ngFor="let error of form.errors?.['rangoNoValido']">{{ error}}</small><br>
+      </div> 
       <div *ngIf="minutos?.invalid && formularioEnviado" class="error">
         <small class="text-danger" >Ingrese el tiempo de la consulta</small><br>
       </div> 
@@ -28,6 +34,6 @@
         <small class="text-danger" >{{form.errors?.['sinDiasSeleccionados']}}</small><br>
       </div>
   
-      <button (click) = "CargarHorariosPorEspecialidad()">Guardar horarios</button>
+      <button (click) = "CargarHorariosPorEspecialidad()" [disabled]="form.pristine || envioExitoso" class="btn btn-primary">Guardar horarios</button>
     </form>
 </div>

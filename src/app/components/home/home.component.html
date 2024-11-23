@@ -18,8 +18,18 @@
             <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/gestion-usuarios">Permisos y Administracion</button>
           </div>
         </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-body solicitar-turnos">
+            <button type="button" class="btn btn-lg btn-block btn-primary">Solicitar Turnos</button>
+          </div>
+        </div>
       }
-      @else {
+      @else if(userData['rol']=='paciente'){
+        <div class="card mb-4 box-shadow">
+          <div class="card-body solicitar-turnos">
+            <button type="button" class="btn btn-lg btn-block btn-primary">Solicitar Turnos</button>
+          </div>
+        </div>
       }
       </div>
 </div>
