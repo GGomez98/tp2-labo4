@@ -1,0 +1,33 @@
+<div class="card">
+    @if (turnosCargados) {
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Paciente</th>
+                <th scope="col">Especialista</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let turno of turnos">
+                <td>{{turno.fecha}}</td>
+                <td>{{turno.hora}}</td>
+                <td>{{turno.paciente}}</td>
+                <td>{{turno.especialista}}</td>
+                <td>{{turno.estado}}</td>
+                <td><button>Cancelar Turno</button></td>
+              </tr>
+            </tbody>
+          </table>
+    }
+    @else {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,29 @@
+<div class="card">
+    @if (especialistasCargados) {
+        <form>
+            <h3>Especialistas</h3>
+            <div class="especialistas">
+                <div class="form-group" *ngFor="let especialista of especialistas">
+                    <input type="checkbox" [id]="especialista.id">
+                    <label [for]="especialista.id" [id]="especialista.id">{{especialista.nombre}} {{especialista.apellido}}</label>
+                </div>
+            </div>
+            <h3>Especialidades</h3>
+            <div class="especialidades">
+                <div class="form-group" *ngFor="let especialidad of especialidades">
+                    <input type="checkbox" [id]="especialidad" name="especialidad">
+                    <label [for]="especialidad">{{especialidad}}</label>
+                </div>
+            </div>
+        
+            <button>Aplicar Filtros</button>
+        </form>
+    }
+    @else {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+</div>

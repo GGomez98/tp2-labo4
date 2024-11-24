@@ -1,6 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { collection, Firestore, getDocs, onSnapshot } from '@angular/fire/firestore';
+import { Auth } from '@angular/fire/auth';
+import { addDoc, collection, doc, Firestore, getDoc, getDocs, onSnapshot } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import moment, {} from 'moment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-solicitar-turno',
@@ -10,6 +14,10 @@ import { collection, Firestore, getDocs, onSnapshot } from '@angular/fire/firest
   styleUrl: './solicitar-turno.component.scss'
 })
 export class SolicitarTurnoComponent {
+  pacientes: any[] = []
+  pacientesCargados = false
+  pacienteSeleccionado: any;
+  pacienteFueSeleccionado = false;
   especialistas: any[] = []
   especialistasCargados = false;
   especialistaFueSeleccionado = false;
@@ -19,11 +27,43 @@ export class SolicitarTurnoComponent {
   horariosEspecialidad: any;
   horariosEspecialidadCargados: boolean = false;
   diasDisponibles: String[] = []
+  diaFueSeleccionado = false;
+  turnosDisponibles: String[] = []
+  turnos: any[] = []
+  diaSeleccionado: any;
+  userData: any;
 
-  constructor(private firestore: Firestore){}
+  constructor(private firestore: Firestore, private auth: Auth, private router: Router){}
 
-  ngOnInit(){
-    this.obtenerEspecialistas()
+  async ngOnInit(){
+    const userId = this.auth.currentUser?.uid
+    const userDocRef = doc(this.firestore, `usuarios/${userId}`);
+    const userDoc = await getDoc(userDocRef);
+    this.userData = userDoc.data();
+    if(this.userData['rol'] == 'paciente'){
+      this.obtenerEspecialistas()
+    }else{
+      this.obtenerPacientes()
+    }
+    this.obtenerTurnosDB()
+  }
+
+  async obtenerPacientes(){
+    const query = collection(this.firestore, "usuarios");
+
+    onSnapshot(query, (querySnapshot) => {
+
+      querySnapshot.forEach(async (doc) => {
+        const usuario = doc.data();
+        if(usuario['rol']=='paciente'){
+          usuario['id'] = doc.id
+          this.pacientes.push(usuario);
+        }
+      });
+
+      console.log(this.pacientes);
+      this.pacientesCargados = true;
+    });
   }
   
   async obtenerEspecialistas(){
@@ -31,7 +71,7 @@ export class SolicitarTurnoComponent {
 
       onSnapshot(query, (querySnapshot) => {
 
-        querySnapshot.forEach(async (doc) => {
+        querySnapshot.forEach((doc) => {
           const usuario = doc.data();
           usuario['especialidades'] = []
           if(usuario['rol']=='especialista'){
@@ -45,12 +85,24 @@ export class SolicitarTurnoComponent {
       });
   }
 
+  async seleccionarPaciente(paciente:any){
+    this.pacienteSeleccionado = paciente;
+    await this.obtenerEspecialistas()
+    this.pacienteFueSeleccionado = true;
+    console.log(this.pacienteSeleccionado)
+    this.especialidadFueSeleccionada = false;
+    this.diaFueSeleccionado = false
+    this.especialidadFueSeleccionada = false
+  }
+
+
   async seleccionarEspecialista(especialista:any){
     this.especialistaSeleccionado = especialista;
     await this.obtenerEspecialidadesConHorarios(especialista)
     this.especialistaFueSeleccionado = true;
     console.log(this.especialistaSeleccionado)
     this.especialidadFueSeleccionada = false;
+    this.diaFueSeleccionado = false
   }
 
   async seleccionarEspecialidad(especialidad:any){
@@ -60,6 +112,27 @@ export class SolicitarTurnoComponent {
     this.diasDisponibles = [];
     console.log(this.especialidadSeleccionada)
     this.obtenerDiasDisponibles();
+    this.diaFueSeleccionado = false
+  }
+
+  mostrarImagenEspecialidad(especialidad: String){
+    let imagen;
+    switch(especialidad){
+      case "Pediatria":
+        imagen = '/assets/images/pediatria.jpg'
+      break;
+      case "Cardiologia":
+        imagen = '/assets/images/cardiologia.jpg'
+      break;
+      case "Odontología":
+        imagen = '/assets/images/odontologia.jpg'
+      break;
+      default:
+        imagen = '/assets/images/por-defecto.jpg'
+      break;
+    }
+
+    return imagen
   }
 
   async obtenerEspecialidadesConHorarios(especialista: any){
@@ -77,6 +150,13 @@ export class SolicitarTurnoComponent {
     } catch (error) {
       console.error("Error al obtener los horarios:", error);
     }
+  }
+
+  obtenerTurnos(dia: String){
+    this.turnosDisponibles = []
+    this.diaSeleccionado = dia
+    this.listarTurnosPorDia(dia)
+    this.diaFueSeleccionado = true;
   }
 
   formatearFecha(fecha: Date) {
@@ -167,16 +247,108 @@ export class SolicitarTurnoComponent {
     }
   }
 
-  obtenerDiasConSemana(fechas: String[]): any[] {
+  obtenerDiasDeSemana(fecha: String): String {
     const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
   
-    return fechas.map(fecha => {
-      const [dia, mes, anio] = fecha.split('-').map(Number);
-      const fechaObj = new Date(anio, mes - 1, dia);
-      const diaSemana = diasSemana[fechaObj.getDay()];
-      return {"diaSemana":diaSemana,"fecha":fecha};
+    const [dia, mes, anio] = fecha.split('-').map(Number);
+    const fechaObj = new Date(anio, mes - 1, dia);
+    const diaSemana = diasSemana[fechaObj.getDay()-1];
+
+    return diaSemana;
+  }
+
+  listarTurnosPorDia(dia: String){
+    const horarioEspecialidad = this.horariosEspecialidad
+    const diaSemana = this.obtenerDiasDeSemana(dia);
+    console.log(diaSemana)
+
+    horarioEspecialidad['horarios'].forEach((horario: any) => {
+      if(horario['diaAtencion'] == diaSemana){
+        this.generarTurnos(horario['inicio'], horario['fin'], horarioEspecialidad['minutosTurno'])
+      }
     });
   }
 
-  listarTurnosPorDia(){}
+  generarTurnos(horaInicio: number,horaFin: number,intervalo: number){
+
+    const horaInicioMoment = moment({hour:horaInicio,minute:0})
+    const horaFinMoment = moment({hour:horaFin,minute:0})
+    const turnosDia = []
+
+    let horario = horaInicioMoment
+
+    while(horario.format('HH:mm') != horaFinMoment.format('HH:mm')){
+      let turnoDisponible = true
+      let horarioFormateado = horario.format('HH:mm');
+      this.turnos.forEach(turno => {
+        if(turno['idEspecialista'] == this.especialistaSeleccionado['id'] && turno['fecha'] == this.diaSeleccionado && turno['hora'] == horarioFormateado && (turno['estado'] == 'Aceptado' || turno['estado'] == 'Finalizado' || turno['estado'] == 'Solicitado')){
+          turnoDisponible = false;
+        }
+      });
+      if(turnoDisponible){
+        turnosDia.push(horarioFormateado);
+      }
+      horario = horario.clone().add(intervalo, 'minutes');
+    }
+
+    console.log(turnosDia)
+    this.turnosDisponibles = turnosDia
+
+  }
+
+  async cargarTurno(turno: any){
+    let idPaciente :String;
+
+    Swal.fire({
+      title: 'Cargando...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      background: '#fff',
+      color: '#000',
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    if(this.userData['rol'] == 'administrador'){
+      idPaciente = this.pacienteSeleccionado['id']
+    }
+    else{
+      idPaciente = this.auth.currentUser?.uid as String
+    }
+
+    const turnoData = {
+      hora: turno,
+      fecha: this.diaSeleccionado,
+      especialidad: this.especialidadSeleccionada,
+      idPaciente: idPaciente,
+      idEspecialista: this.especialistaSeleccionado['id'],
+      estado: 'Solicitado'
+    }
+
+    const turnoDocRef = collection(this.firestore, `turnos`);
+    await addDoc(turnoDocRef, turnoData);
+    Swal.fire({
+      title: `El turno fue solicitado con exito`,
+      background: '#fff',
+      color: '#000',
+      confirmButtonColor: '#ff5722'
+    })
+    this.router.navigate(['/home'])
+  }
+
+  async obtenerTurnosDB(){
+    const query = collection(this.firestore, "turnos");
+
+    try {
+      const querySnapshot = await getDocs(query);
+      querySnapshot.forEach((doc) => {
+        const turno = doc.data();
+        this.turnos.push(turno)
+      });
+      console.log(this.turnos);
+    } catch (error) {
+      console.error("Error al obtener los horarios:", error);
+    }
+  }
 }

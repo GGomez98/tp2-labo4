@@ -1,27 +1,47 @@
 <div class="main-container">
     <div class="pasos">
-        <div class="especialistas">
-            @if(especialistasCargados){
-                <h2>Seleccione un especialista</h2>
-                <button *ngFor="let especialista of especialistas" class="card" (click)="seleccionarEspecialista(especialista)">
-                    <img [src]="especialista.imagen" class="card-img-top">
-                    <h3 class="card-title">{{especialista.nombre}} {{especialista.apellido}}</h3>
-                </button>
-            }
-            @else{
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                      <span class="visually-hidden">Loading...</span>
+        @if(userData['rol']=='administrador'){
+            <div class="pacientes">
+                @if(pacientesCargados){
+                    <h2>Seleccione un paciente</h2>
+                    <button *ngFor="let paciente of pacientes" class="card" (click)="seleccionarPaciente(paciente)" [ngClass]="{'selected': paciente === pacienteSeleccionado}">
+                        <img [src]="paciente.imagen1" class="card-img-top">
+                        <h3 class="card-title">{{paciente.nombre}} {{paciente.apellido}}</h3>
+                    </button>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
+        @if(userData['rol'] == 'paciente' || userData['rol'] == 'administrador' && pacienteFueSeleccionado){
+            <div class="especialistas">
+                @if(especialistasCargados){
+                    <h2>Seleccione un especialista</h2>
+                    <button *ngFor="let especialista of especialistas" class="card" (click)="seleccionarEspecialista(especialista)" [ngClass]="{'selected': especialista === especialistaSeleccionado && especialistaFueSeleccionado}">
+                        <img [src]="especialista.imagen" class="card-img-top">
+                        <h3 class="card-title">{{especialista.nombre}} {{especialista.apellido}}</h3>
+                    </button>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
         @if(especialistaFueSeleccionado){
             <div class="especialidades">
                 @if(especialistasCargados){
                     <h2>Seleccione una especialidad</h2>
-                    <button *ngFor="let especialidad of especialistaSeleccionado['especialidades']" class="card" (click)="seleccionarEspecialidad(especialidad)">
-                        <!-- <img [src]="especialidad.imagen" class="card-img-top"> -->
+                    <button *ngFor="let especialidad of especialistaSeleccionado['especialidades']" class="card" (click)="seleccionarEspecialidad(especialidad)" [ngClass]="{'selected': especialidad === especialidadSeleccionada && especialidadFueSeleccionada}">
+                        <img [src]="mostrarImagenEspecialidad(especialidad)" class="card-img-top">
                         <h3 class="card-title">{{especialidad}}</h3>
                     </button>
                 }
@@ -38,8 +58,7 @@
             <div class="dias">
                 @if(horariosEspecialidadCargados){
                     <h2>Seleccione un dia</h2>
-                    <button *ngFor="let dia of diasDisponibles" class="card">
-                        <!-- <img [src]="especialidad.imagen" class="card-img-top"> -->
+                    <button *ngFor="let dia of diasDisponibles" class="card" (click)="obtenerTurnos(dia)" [ngClass]="{'selected': dia === diaSeleccionado && diaFueSeleccionado}">
                         <h3 class="card-title">{{dia}}</h3>
                     </button>
                 }
@@ -52,5 +71,22 @@
                 }
             </div>
         }
+        @if(diaFueSeleccionado){
+            <div class="turnos">
+                @if(horariosEspecialidadCargados){
+                    <h2>Seleccione un Turno</h2>
+                    <button *ngFor="let turno of turnosDisponibles" class="card" (click)="cargarTurno(turno)">
+                        <h3 class="card-title">{{turno}}</h3>
+                    </button>
+                }
+                @else{
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }   
     </div>
 </div>

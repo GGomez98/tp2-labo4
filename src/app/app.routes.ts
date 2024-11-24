@@ -10,6 +10,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { OpcionesRegistroComponent } from './opciones-registro/opciones-registro.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-turno.component';
+import { TurnosAdminComponent } from './components/turnos-admin/turnos-admin.component';
 
 export const routes: Routes = [
     {component:BienvenidaComponent, path:''},
@@ -22,5 +23,6 @@ export const routes: Routes = [
     {component:HomeComponent, path: 'home', canActivate: [authGuard]},
     {component: GestionUsuariosComponent, path: 'gestion-usuarios', canActivate: [authGuard]},
     {component: PerfilComponent, path: 'perfil', canActivate: [authGuard]},
-    {component: SolicitarTurnoComponent, path: 'solicitar-turno'}
+    {component: SolicitarTurnoComponent, path: 'solicitar-turno', canActivate: [authGuard]},
+    {component: TurnosAdminComponent, path:'turnos'}
 ];

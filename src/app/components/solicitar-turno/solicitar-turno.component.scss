@@ -10,8 +10,9 @@
         width: 95vw;
         height: 80vh;
         display: flex;
-        justify-content: start;
-        .especialistas,.especialidades,.dias{
+        justify-content: center;
+        .especialistas,.especialidades,.dias,.turnos, .pacientes{
+            margin: 0px 10px;
             height: 100%;
             width: 20%;
             min-width: 300px;
@@ -44,10 +45,24 @@
                     height: 80%;
                 }
             }
+            .selected{
+                border: 3px solid #2c8ab3;
+            }
             .d-flex{
                 height: 100%;
                 display: flex;
                 align-items: center;
+            }
+        }
+        .dias,.turnos{
+            button{
+                height: 10%;
+                h3{
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
             }
         }
     }
