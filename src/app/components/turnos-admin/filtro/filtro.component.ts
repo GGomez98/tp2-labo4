@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { collection, Firestore, getDocs, onSnapshot } from '@angular/fire/firestore';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-filtro',
@@ -11,16 +11,31 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './filtro.component.scss'
 })
 export class FiltroComponent {
+  @Output() filtrar = new EventEmitter <any> ();
   filtros!: FormGroup
   especialidades: any[] = []
   especialistas: any[] = []
   especialistasCargados = false
 
-  constructor(private firestore: Firestore){}
+  constructor(private firestore: Firestore, private fb: FormBuilder){}
 
   async ngOnInit(){
     await this.obtenerEspecialistas()
     this.obtenerEspecialidades()
+    const especialistasControls = this.especialistas.reduce((controls, esp) => {
+      controls[esp.id] = true;
+      return controls;
+    }, {} as any);
+
+    const especialidadesControls = this.especialidades.reduce((controls, esp) => {
+      controls[esp] = true;
+      return controls;
+    }, {} as any);
+
+    this.filtros = this.fb.group({
+      ...especialistasControls,
+      ...especialidadesControls,
+    });
   }
 
   async obtenerEspecialistas(){
@@ -51,5 +66,19 @@ export class FiltroComponent {
       });
     });
     console.log(this.especialidades);
+  }
+  aplicarFiltrosFn(){
+
+    const seleccionados = Object.keys(this.filtros.value).filter(key => this.filtros.value[key]);
+
+    const seleccionadosEspecialistas = seleccionados.filter(key =>
+      this.especialistas.some(especialista => especialista.id === key)
+    );
+
+    const seleccionadosEspecialidades = seleccionados.filter(key =>
+      this.especialidades.includes(key)
+    );
+
+    this.filtrar.emit({'especialistas':seleccionadosEspecialistas, 'especialidades': seleccionadosEspecialidades})
   }
 }

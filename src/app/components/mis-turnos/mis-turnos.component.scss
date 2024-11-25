@@ -1,0 +1,14 @@
+.main-container{
+    background-image:url("/assets/images/hospital.jpg");
+    background-size: cover;
+    justify-content: center;
+    height: 94.5vh;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+app-filtro, app-listado-turnos{
+    width: 100%;
+}

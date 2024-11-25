@@ -7,18 +7,62 @@
                 <th scope="col">Hora</th>
                 <th scope="col">Paciente</th>
                 <th scope="col">Especialista</th>
+                <th scope="col">Especialidad</th>
                 <th scope="col">Estado</th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let turno of turnos">
+              <tr *ngFor="let turno of turnosFiltrados">
                 <td>{{turno.fecha}}</td>
                 <td>{{turno.hora}}</td>
                 <td>{{turno.paciente}}</td>
                 <td>{{turno.especialista}}</td>
-                <td>{{turno.estado}}</td>
-                <td><button>Cancelar Turno</button></td>
+                <td>{{turno.especialidad}}</td>
+                @if(turno.estado == 'Solicitado'){
+                  <td class="solicitado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Cancelado'){
+                  <td class="cancelado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Rechazado'){
+                  <td class="rechazado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Aceptado'){
+                  <td class="aceptado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Finalizado'){
+                  <td class="finalizado">{{turno.estado}}</td>
+                }
+                @if(turno.estado != 'Aceptado' && turno.estado != 'Finalizado' && turno.estado != 'Rechazado' && turno.estado != 'Cancelado'){
+                  <td><button [attr.data-bs-target]="'#'+turno['id']" data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button></td>
+                  <ng-template #content let-modal class="cancelar-container">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Cancelar Turno</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Ingrese el motivo de la cancelación:</p>
+                      <textarea #textarea></textarea>
+                    </div>
+                    <div *ngIf="motivoCancelacionVacio && motivoCancelacionEnviado">
+                      <small>Ingrese un motivo</small>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="cancelarTurno(turno, textarea.value, modal)">Cancelar turno</button>
+                    </div>
+                  </ng-template>
+                }
+                @else if(turno.estado == 'Cancelado'){
+                  <td>Motivo cancelacion: {{turno.motivoCancelacion}}</td>
+                }
+                @else if(turno.estado == 'Rechazado'){
+                  <td>Motivo rechazo: {{turno.motivoRechazo}}</td>
+                }
+                @else{
+                  <td></td>
+                }
               </tr>
             </tbody>
           </table>

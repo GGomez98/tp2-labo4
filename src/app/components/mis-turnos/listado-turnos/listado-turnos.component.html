@@ -1,0 +1,246 @@
+<div class="card">
+    @if (turnosCargados) {
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Paciente</th>
+                <th scope="col">Especialista</th>
+                <th scope="col">Especialidad</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let turno of turnosFiltrados">
+                <td>{{turno.fecha}}</td>
+                <td>{{turno.hora}}</td>
+                <td>{{turno.paciente}}</td>
+                <td>{{turno.especialista}}</td>
+                <td>{{turno.especialidad}}</td>
+                @if(turno.estado == 'Solicitado'){
+                  <td class="solicitado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Cancelado'){
+                  <td class="cancelado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Rechazado'){
+                  <td class="rechazado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Aceptado'){
+                  <td class="aceptado">{{turno.estado}}</td>
+                }
+                @else if(turno.estado == 'Finalizado'){
+                  <td class="finalizado">{{turno.estado}}</td>
+                }
+                @if(turno.estado != 'Aceptado' && turno.estado != 'Finalizado' && turno.estado != 'Rechazado' && turno.estado != 'Cancelado'){
+                  @if(userData['rol'] == 'especialista'){
+                    <td>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Rechazar Turno</button>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button>
+                      <button data-bs-toggle="modal" (click)="aceptarTurno(turno)">Aceptar Turno</button>
+                    </td>
+                  }
+                  @else{
+                    <td>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button>
+                    </td>
+                  }
+                  <ng-template #content let-modal class="rechazar-container">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Rechazar Turno</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Ingrese el motivo de rechazo:</p>
+                      <textarea #textarea></textarea>
+                    </div>
+                    <div *ngIf="motivoRechazoVacio && motivoRechazoEnviado">
+                      <small>Ingrese un motivo</small>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="rechazarTurno(turno, textarea.value, modal)">Rechazar turno</button>
+                    </div>
+                  </ng-template>
+                  <ng-template #content let-modal class="cancelar-container">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Cancelar Turno</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Ingrese el motivo de la cancelación:</p>
+                      <textarea #textarea></textarea>
+                    </div>
+                    <div *ngIf="motivoCancelacionVacio && motivoCancelacionEnviado">
+                      <small>Ingrese un motivo</small>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="cancelarTurno(turno, textarea.value, modal)">Cancelar turno</button>
+                    </div>
+                  </ng-template>
+                }
+                @else if(turno.estado == 'Cancelado'){
+                  <td>Motivo cancelacion: {{turno.motivoCancelacion}}</td>
+                }
+                @else if(turno.estado == 'Rechazado'){
+                  <td>Motivo rechazo: {{turno.motivoRechazo}}</td>
+                }
+                @else if(turno.estado == 'Aceptado' && userData['rol'] == 'especialista'){
+                  <td><button data-bs-toggle="modal" (click)=" abrirModal(content)">Finalizar Turno</button></td>
+                  <ng-template #content let-modal class="finalizar-container">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Finalizar Turno</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Ingrese una reseña:</p>
+                      <textarea #textarea></textarea>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="finalizarTurno(turno, textarea.value, modal)">Finalizar Turno</button>
+                    </div>
+                  </ng-template>
+                }
+                @else if(turno.estado == 'Finalizado'){
+                  @if(userData['rol'] == 'especialista'){
+                    @if(turno.resenia != undefined){
+                      <td>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
+                      </td>
+                    }
+                    @else {
+                      <td></td>
+                    }
+                  }
+                  @else{
+                    @if(turno.resenia != undefined && turno.calificacionAtencion == undefined && turno.calificacionEncuesta == undefined){
+                      <td>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)">Encuesta</button>
+                      </td>
+                    }
+                    @else if(turno.resenia != undefined && turno.calificacionAtencion == undefined){
+                      <td>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
+                      </td>
+                    }
+                    @else if(turno.resenia != undefined && turno.calificacionEncuesta == undefined){
+                      <td>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)">Encuesta</button>
+                      </td>
+                    }
+                    @else if(turno.calificacionAtencion == undefined){
+                      <td>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
+                      </td>
+                    }
+                    @else {
+                      <td></td>
+                    }
+                  }
+                  <ng-template #content let-modal class="resenia">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Reseña</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>{{turno.resenia}}</p>
+                    </div>
+                  </ng-template>
+                  <ng-template #content2 let-modal class="calificacion">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Califique su atencion</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <textarea #textarea></textarea>
+                    </div>
+                    <div *ngIf="calificacionAtencionVacia && calificacionEnviada">
+                      <small>Ingrese un comentario</small>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="calificarAtencion(turno, textarea.value, modal)">Enviar</button>
+                    </div>
+                  </ng-template>
+                  <ng-template #content3 let-modal class="encuesta">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Encuesta</h4>
+                      <button type="button" class="btn-close" (click)="modal.close()"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Del 1 al 10 como calificaria los servicios brindados?</p>
+                      <form [formGroup]="encuesta">
+                        <div class="puntaje">
+                          <label for="1">1</label>
+                          <input type="radio" formControlName="puntaje" [value]="1" > 
+                        </div>
+                        <div class="puntaje">
+                          <label for="2">2</label>
+                          <input type="radio" formControlName="puntaje" [value]="2"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="3">3</label>
+                          <input type="radio" formControlName="puntaje" [value]="3"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="4">4</label>
+                          <input type="radio" formControlName="puntaje" [value]="4"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="5">5</label>
+                          <input type="radio" formControlName="puntaje" [value]="5"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="6">6</label>
+                          <input type="radio" formControlName="puntaje" [value]="6"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="7">7</label>
+                          <input type="radio" formControlName="puntaje" [value]="7"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="8">8</label>
+                          <input type="radio" formControlName="puntaje" [value]="8"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="9">9</label>
+                          <input type="radio" formControlName="puntaje" [value]="9"> 
+                        </div>
+                        <div class="puntaje">
+                          <label for="10">10</label>
+                          <input type="radio" formControlName="puntaje" [value]="10"> 
+                        </div>
+                      </form>
+                    </div>
+                    <div *ngIf="puntajeEnviado && puntajeVacio">
+                      <small>Seleccione una puntuacion</small>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      <button class="btn btn-primary" (click)="enviarEncuesta(turno, puntaje?.value, modal)">Enviar</button>
+                    </div>
+                  </ng-template>
+                }
+                @else{
+                  <td></td>
+                }
+              </tr>
+            </tbody>
+          </table>
+    }
+    @else {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+</div>

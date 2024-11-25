@@ -1,13 +1,24 @@
 <div class="card">
-    @if (especialistasCargados) {
-        <form [formGroup]="filtros">
-            <h3>Especialistas</h3>
+    @if(pacientesCargados) {
+        <form [formGroup]="filtros" class="filtros">
+            @if(userData['rol']=='paciente'){
+                <h3>Especialistas</h3>
             <div class="especialistas">
                 <div class="form-group" *ngFor="let especialista of especialistas">
                     <input type="checkbox" [id]="especialista.id" [name]="especialista.id" [value] = "especialista.id" [formControlName]="especialista.id">
                     <label [for]="especialista.id" [id]="especialista.id">{{especialista.nombre}} {{especialista.apellido}}</label>
                 </div>
             </div>
+            }
+            @else{
+                <h3>Pacientes</h3>
+            <div class="pacientes">
+                <div class="form-group" *ngFor="let paciente of pacientes">
+                    <input type="checkbox" [id]="paciente.id" [name]="paciente.id" [value] = "paciente.id" [formControlName]="paciente.id">
+                    <label [for]="paciente.id" [id]="paciente.id">{{paciente.nombre}} {{paciente.apellido}}</label>
+                </div>
+            </div>
+            }
             <h3>Especialidades</h3>
             <div class="especialidades">
                 <div class="form-group" *ngFor="let especialidad of especialidades">

@@ -13,20 +13,4 @@ import { RegistroPacienteComponent } from '../../registro/registro-paciente/regi
   styleUrl: './gestion-usuarios.component.scss'
 })
 export class GestionUsuariosComponent {
-  modal: Modal | undefined;
-
-  ngAfterViewInit() {
-    const modalElement = document.getElementById('miModal');
-    if (modalElement) {
-      this.modal = new Modal(modalElement);
-    }
-  }
-
-  openModal() {
-    this.modal?.show();
-  }
-
-  closeModal() {
-    this.modal?.hide();
-  }
 }

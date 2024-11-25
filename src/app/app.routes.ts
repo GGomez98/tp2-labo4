@@ -11,6 +11,7 @@ import { OpcionesRegistroComponent } from './opciones-registro/opciones-registro
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-turno.component';
 import { TurnosAdminComponent } from './components/turnos-admin/turnos-admin.component';
+import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
 
 export const routes: Routes = [
     {component:BienvenidaComponent, path:''},
@@ -24,5 +25,6 @@ export const routes: Routes = [
     {component: GestionUsuariosComponent, path: 'gestion-usuarios', canActivate: [authGuard]},
     {component: PerfilComponent, path: 'perfil', canActivate: [authGuard]},
     {component: SolicitarTurnoComponent, path: 'solicitar-turno', canActivate: [authGuard]},
-    {component: TurnosAdminComponent, path:'turnos'}
+    {component: TurnosAdminComponent, path:'turnos', canActivate: [authGuard]},
+    {component: MisTurnosComponent, path:'mis-turnos'}
 ];
