@@ -15,24 +15,24 @@
             <tbody>
               <tr *ngFor="let turno of turnosFiltrados">
                 <td>{{turno.fecha}}</td>
-                <td>{{turno.hora}}</td>
+                <td>{{turno.hora | timeFormat}}</td>
                 <td>{{turno.paciente}}</td>
                 <td>{{turno.especialista}}</td>
                 <td>{{turno.especialidad}}</td>
                 @if(turno.estado == 'Solicitado'){
-                  <td class="solicitado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda] = "'solicitado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Cancelado'){
-                  <td class="cancelado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda] = "'cancelado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Rechazado'){
-                  <td class="rechazado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'rechazado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Aceptado'){
-                  <td class="aceptado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'aceptado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Finalizado'){
-                  <td class="finalizado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'finalizado'">{{turno.estado}}</td>
                 }
                 @if(turno.estado != 'Aceptado' && turno.estado != 'Finalizado' && turno.estado != 'Rechazado' && turno.estado != 'Cancelado'){
                   <td><button [attr.data-bs-target]="'#'+turno['id']" data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button></td>

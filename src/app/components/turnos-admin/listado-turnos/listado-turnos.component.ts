@@ -4,11 +4,13 @@ import { collection, doc, Firestore, getDoc, onSnapshot, setDoc } from '@angular
 import { FormsModule } from '@angular/forms';
 import bootstrap, { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { TimeFormatPipe } from '../../../pipes/time-format.pipe';
+import { CambiarColorCeldaDirective } from '../../../directives/cambiar-color-celda.directive';
 
 @Component({
   selector: 'app-listado-turnos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TimeFormatPipe, CambiarColorCeldaDirective],
   templateUrl: './listado-turnos.component.html',
   styleUrl: './listado-turnos.component.scss'
 })

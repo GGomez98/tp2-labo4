@@ -1,0 +1,54 @@
+<div class="container my-5">
+    @if(userData['rol']=='paciente' && turnosCargados){
+        <h2 class="text-center mb-4">Historia Clinica de {{userData.nombre}}</h2>
+        <form [formGroup]="historiaClinicaEspecialista">
+            <label for="especialistas">Descargar historia clinica por especialista: </label>
+            <select formControlName="especialista" (change)="filtrarHistoriaClinica()">
+                <option value="">Todos</option>
+                <option *ngFor="let especialista of especialistasPorPaciente" [value]="especialista.id">
+                    {{especialista.nombre}} {{especialista.apellido}}
+                </option>
+            </select>
+            <button (click)="descargarHistoriaClinica()">Descargar</button>
+        </form>
+        <table class="table table-striped table-hover table-bordered" id="historia-clinica">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Especialista</th>
+              <th>Altura</th>
+              <th>Peso</th>
+              <th>Presion</th>
+              <th>Temperatura</th>
+              <th>Datos Adicionales</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let turno of turnosPorEspecialista">
+                <td>{{turno.fecha}}</td>
+                <td>{{turno.hora | timeFormat}}</td>
+                <td>{{turno.especialista}}</td>
+                <td>{{turno.historiaClinica.altura}}</td>
+                <td>{{turno.historiaClinica.peso}}</td>
+                <td>{{turno.historiaClinica.presion}}</td>
+                <td>{{turno.historiaClinica.temperatura}}</td>
+                <td>
+                    <ul>
+                        <li *ngFor="let item of turno.historiaClinica.datosDinamicos | keyValueList">
+                          {{ item.key }}: {{ item.value }}
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+    }
+    @else{
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+  </div>

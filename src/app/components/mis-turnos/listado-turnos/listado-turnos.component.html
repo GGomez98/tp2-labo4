@@ -15,24 +15,24 @@
             <tbody>
               <tr *ngFor="let turno of turnosFiltrados">
                 <td>{{turno.fecha}}</td>
-                <td>{{turno.hora}}</td>
+                <td>{{turno.hora | timeFormat}}</td>
                 <td>{{turno.paciente}}</td>
                 <td>{{turno.especialista}}</td>
                 <td>{{turno.especialidad}}</td>
                 @if(turno.estado == 'Solicitado'){
-                  <td class="solicitado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda] = "'solicitado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Cancelado'){
-                  <td class="cancelado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda] = "'cancelado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Rechazado'){
-                  <td class="rechazado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'rechazado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Aceptado'){
-                  <td class="aceptado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'aceptado'">{{turno.estado}}</td>
                 }
                 @else if(turno.estado == 'Finalizado'){
-                  <td class="finalizado">{{turno.estado}}</td>
+                  <td [appCambiarColorCelda]="'finalizado'">{{turno.estado}}</td>
                 }
                 @if(turno.estado != 'Aceptado' && turno.estado != 'Finalizado' && turno.estado != 'Rechazado' && turno.estado != 'Cancelado'){
                   @if(userData['rol'] == 'especialista'){
@@ -96,7 +96,53 @@
                       <button type="button" class="btn-close" (click)="modal.close()"></button>
                     </div>
                     <div class="modal-body">
-                      <p>Ingrese una reseña:</p>
+                      <form [formGroup]="historiaClinica">
+                        <div class="form-group">
+                          <label for="altura">Altura</label>
+                          <input type="number" formControlName="altura" placeholder="cm">
+                          <div *ngIf="(this.historiaClinica.get('altura')?.value < 50 || this.historiaClinica.get('altura')?.value > 300) && historiaClinicaEnviada">
+                            <small>La altura debe ser entre 50cm y 300cm</small>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="peso">Peso</label>
+                          <input type="number" formControlName="peso" placeholder="kg">
+                          <div *ngIf="(this.historiaClinica.get('peso')?.value < 5 || this.historiaClinica.get('peso')?.value > 300) && historiaClinicaEnviada">
+                            <small>El peso debe ser entre 5kg y 300kg</small>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="temperatura">Temperatura</label>
+                          <input type="number" formControlName="temperatura" placeholder="Cº">
+                          <div *ngIf="(this.historiaClinica.get('temperatura')?.value < 20 || this.historiaClinica.get('temperatura')?.value > 45) && historiaClinicaEnviada">
+                            <small>La temperatura debe ser entre 30Cº y 45Cº</small>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="presion">Presion</label>
+                          <input type="number" formControlName="presion" placeholder="mmHg">
+                          <div *ngIf="(this.historiaClinica.get('presion')?.value < 60 || this.historiaClinica.get('presion')?.value > 150) && historiaClinicaEnviada">
+                            <small>La presion debe ser entre 60mmHg y 150mmHg</small>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Datos Dinamicos</label>
+                          <div class="datos-dinamicos" formArrayName="datosDinamicos" *ngFor="let dato of datosDinamicos.controls; let i = index">
+                            <div [formGroupName]="i">
+                              <input type="text" class="clave" formControlName="clave">
+                              <input type="text" class="valor" formControlName="valor">
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="datosDinamicos?.invalid && historiaClinicaEnviada">
+                          <small>Hay campos sin completar, completelos o eliminelos</small>
+                        </div>
+                        <div class="form-group">
+                          <button (click)="eliminarDatosDinamicos(datosDinamicos.length - 1)" *ngIf="datosDinamicos.length > 0">-</button>
+                          <button (click)="agregarDatosDinamicos()" *ngIf="datosDinamicos.length < 3">+</button>
+                        </div>
+                      </form>
+                      <p>Ingrese una reseña (opcional):</p>
                       <textarea #textarea></textarea>
                     </div>
                     <div class="modal-footer">

@@ -5,11 +5,12 @@ import { addDoc, collection, doc, Firestore, getDoc, getDocs, onSnapshot } from 
 import { Router } from '@angular/router';
 import moment, {} from 'moment';
 import Swal from 'sweetalert2';
+import { TimeFormatPipe } from '../../pipes/time-format.pipe';
 
 @Component({
   selector: 'app-solicitar-turno',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TimeFormatPipe],
   templateUrl: './solicitar-turno.component.html',
   styleUrl: './solicitar-turno.component.scss'
 })

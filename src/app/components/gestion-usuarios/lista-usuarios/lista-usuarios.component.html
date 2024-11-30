@@ -5,6 +5,7 @@
         <button (click)="obtenerUsuarios('')" class="lista active" #pacientesBtn>Pacientes</button>
         <button (click)="obtenerUsuarios('especialistas')" class="lista" #especialistasBtn>Especialistas</button>
         <button (click)="obtenerUsuarios('administradores')" class="lista" #administradoresBtn>Administradores</button>
+        <button (click)="descargarUsuarios()">Descargar Datos</button>
       </nav>
       @if(listaAdministradores){
         <table class="table">

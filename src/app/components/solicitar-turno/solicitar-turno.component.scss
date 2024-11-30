@@ -54,7 +54,14 @@
                 align-items: center;
             }
         }
-        .dias,.turnos{
+        .especialidades,.dias{
+            .card{
+                border-radius: 0px;
+                display: flex;
+                justify-content: center;
+            }
+        }
+        .especialidades,.turnos{
             button{
                 height: 10%;
                 h3{
@@ -62,6 +69,17 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                }
+            }
+        }
+        .especialidades{
+            button{
+                height: 20%;
+                h3{
+                    font-size: 20px;
+                }
+                img{
+                    height: 70%;
                 }
             }
         }

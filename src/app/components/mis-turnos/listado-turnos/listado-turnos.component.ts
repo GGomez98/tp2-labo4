@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Pipe } from '@angular/core';
+import { Component, ElementRef, Input, Pipe, ViewChild } from '@angular/core';
 import { Auth, user } from '@angular/fire/auth';
 import { collection, doc, Firestore, getDoc, onSnapshot, setDoc } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import bootstrap, { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { RangePipe } from '../../../pipes/range.pipe';
+import { TimeFormatPipe } from '../../../pipes/time-format.pipe';
+import { CambiarColorCeldaDirective } from '../../../directives/cambiar-color-celda.directive';
 
 @Component({
   selector: 'app-listado-turnos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TimeFormatPipe, CambiarColorCeldaDirective],
   templateUrl: './listado-turnos.component.html',
   styleUrl: './listado-turnos.component.scss'
 })
@@ -27,14 +29,26 @@ export class ListadoTurnosComponent {
   calificacionAtencionVacia: boolean = true
   userData: any;
   encuesta!: FormGroup
+  historiaClinica!: FormGroup
+  datosDinamicosForm!: FormGroup
   puntajeEnviado = false;
   puntajeVacio = true;
+  valoresAdicionales: number = 0;
+  historiaClinicaEnviada = false;
 
   constructor(private firestore: Firestore, private modalService: NgbModal, private auth: Auth, private fb: FormBuilder){
     this.encuesta = this.fb.group({
       puntaje: ''
     });
+    this.historiaClinica = new FormGroup({
+      altura: new FormControl("",[Validators.required,Validators.min(50),Validators.max(300)]),
+      peso: new FormControl("",[Validators.required,Validators.min(5),Validators.max(300)]),
+      temperatura: new FormControl("",[Validators.required,Validators.min(30),Validators.max(45)]),
+      presion: new FormControl("",[Validators.required,Validators.min(60),Validators.max(150)]),
+      datosDinamicos: new FormArray([])
+    })
   }
+
 
   async ngOnInit(){
     this.obtenerTurnos()
@@ -52,6 +66,33 @@ export class ListadoTurnosComponent {
     else{
       this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])||this.filtros['pacientes'].includes(turno['idPaciente']))
     }
+  }
+
+  agregarDatosDinamicos(){
+    const nuevoCampo = new FormGroup({
+      clave: new FormControl("" ,[Validators.required]),
+      valor: new FormControl("" ,[Validators.required]), 
+    });
+    this.datosDinamicos.push(nuevoCampo);
+    console.log(this.guardarDatosDinamicos())
+  }
+
+  eliminarDatosDinamicos(index: number){
+    this.datosDinamicos.removeAt(index);
+  }
+
+  guardarDatosDinamicos() {
+    const datosDinamicosArray = this.datosDinamicos.value; // Obtiene el array de pares clave-valor
+      const datosComoObjeto = datosDinamicosArray.reduce((obj: any, item: any) => {
+        if (item.clave) {
+          obj[item.clave] = item.valor; // Agrega la clave y valor al objeto
+        }
+        return obj;
+      }, {});
+  
+      console.log('Objeto generado:', datosComoObjeto);
+
+      return datosComoObjeto;
   }
 
   async obtenerTurnos(){
@@ -100,7 +141,7 @@ export class ListadoTurnosComponent {
   }
 
   abrirModal(content: any) {
-    this.modalService.open(content); // Abre el modal con el template #content
+    this.modalService.open(content);
   }
 
   async cancelarTurno(turno: any, motivo: String, modal:any){
@@ -317,45 +358,79 @@ export class ListadoTurnosComponent {
   }
 
   async finalizarTurno(turno: any, resenia: string, modal: any){
-    this.motivoRechazoEnviado = true;
-    const turnoData={
-      especialidad: turno.especialidad,
-      estado: 'Finalizado',
-      fecha: turno.fecha,
-      hora: turno.hora,
-      idEspecialista: turno.idEspecialista,
-      idPaciente: turno.idPaciente,
-      resenia: resenia
-    }
-    
-    Swal.fire({
-      title: 'Cargando...',
-      text: 'Por favor espera',
-      allowOutsideClick: false,
-      background: '#fff',
-      color: '#000',
-      didOpen: () => {
-        Swal.showLoading();
+    this.historiaClinicaEnviada = true
+    if(this.historiaClinica.valid){
+      let turnoData;
+      let historiaClinica;
+      let datosDinamicos = this.guardarDatosDinamicos();
+
+      historiaClinica={
+        altura: this.historiaClinica.get('altura')?.value,
+        peso: this.historiaClinica.get('peso')?.value,
+        temperatura: this.historiaClinica.get('temperatura')?.value,
+        presion: this.historiaClinica.get('presion')?.value,
+        datosDinamicos: datosDinamicos
       }
-    });
-    try{
-      const turnoDocRef = doc(this.firestore, `turnos/${turno.id}`);
-      await setDoc(turnoDocRef, turnoData);
+
+      if(resenia == ''){
+        turnoData={
+          especialidad: turno.especialidad,
+          estado: 'Finalizado',
+          fecha: turno.fecha,
+          hora: turno.hora,
+          idEspecialista: turno.idEspecialista,
+          idPaciente: turno.idPaciente,
+          historiaClinica: historiaClinica
+        }
+      }
+      else{
+        turnoData={
+          especialidad: turno.especialidad,
+          estado: 'Finalizado',
+          fecha: turno.fecha,
+          hora: turno.hora,
+          idEspecialista: turno.idEspecialista,
+          idPaciente: turno.idPaciente,
+          resenia: resenia,
+          historiaClinica: historiaClinica
+        }
+      }
+
+      console.log(this.datosDinamicos);
+      
       Swal.fire({
-        title: `El turno fue Finalizado`,
+        title: 'Cargando...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
         background: '#fff',
         color: '#000',
-        confirmButtonColor: '#ff5722'
-      })
-      this.motivoRechazoEnviado = false;
-      modal.close()
-    }
-    catch(error){
-      console.error("Error al obtener los datos de los usuarios: "+error)
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      try{
+        const turnoDocRef = doc(this.firestore, `turnos/${turno.id}`);
+        await setDoc(turnoDocRef, turnoData);
+        Swal.fire({
+          title: `El turno fue Finalizado`,
+          background: '#fff',
+          color: '#000',
+          confirmButtonColor: '#ff5722'
+        })
+        this.historiaClinicaEnviada = false;
+        modal.close()
+      }
+      catch(error){
+        console.error("Error al obtener los datos de los usuarios: "+error)
+      }
     }
   }
 
   get puntaje(){
     return this.encuesta.get('puntaje')
+  }
+
+  get datosDinamicos(): FormArray {
+    return this.historiaClinica.get('datosDinamicos') as FormArray;
   }
 }

@@ -3,11 +3,12 @@ import { Component, ComponentRef, ElementRef, ViewChild, ViewContainerRef } from
 import { Auth } from '@angular/fire/auth';
 import { collection, doc, docData, Firestore, getDoc, onSnapshot } from '@angular/fire/firestore';
 import { FormHorariosComponent } from './form-horarios/form-horarios.component';
+import { HistoriaClinicaComponent } from '../historia-clinica/historia-clinica.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormHorariosComponent],
+  imports: [CommonModule, FormHorariosComponent, HistoriaClinicaComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss'
 })

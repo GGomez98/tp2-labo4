@@ -30,6 +30,7 @@ export class LoginComponent {
     {email: "admin@mail.com", pass:"123456", imagen:"/assets/images/admin.jpeg", pos:'380px'}
   ]
   isExpanded = false;
+  animacion = true;
 
   constructor(public auth: Auth, private router: Router, private firestore: Firestore) {}
 

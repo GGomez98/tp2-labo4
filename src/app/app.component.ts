@@ -1,21 +1,23 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { BienvenidaComponent } from './components/bienvenida/bienvenida.component';
+import { ChildrenOutletContexts, Router, RouterModule, RouterOutlet } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
+import { slideInAnimation } from './animations/animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BienvenidaComponent,RouterModule],
+  imports: [RouterOutlet,RouterModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  animations: [
+    slideInAnimation
+  ]
 })
 export class AppComponent {
   title = 'tp2_labo4';
 
-  constructor(protected router: Router, protected auth: Auth) {}
+  constructor(protected router: Router, protected auth: Auth, private contexts: ChildrenOutletContexts) {}
   
   goTo(path: string) {
     console.log(path);
@@ -43,5 +45,9 @@ export class AppComponent {
         this.goTo('/login');
       }
     });
+  }
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
   }
 }

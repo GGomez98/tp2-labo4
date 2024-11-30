@@ -76,7 +76,7 @@
                 @if(horariosEspecialidadCargados){
                     <h2>Seleccione un Turno</h2>
                     <button *ngFor="let turno of turnosDisponibles" class="card" (click)="cargarTurno(turno)">
-                        <h3 class="card-title">{{turno}}</h3>
+                        <h3 class="card-title">{{turno | timeFormat}}</h3>
                     </button>
                 }
                 @else{

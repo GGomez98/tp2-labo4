@@ -14,9 +14,9 @@ import { TurnosAdminComponent } from './components/turnos-admin/turnos-admin.com
 import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
 
 export const routes: Routes = [
-    {component:BienvenidaComponent, path:''},
-    {component:LoginComponent, path:'login'},
-    {component:OpcionesRegistroComponent, path:'opciones-registro'},
+    {component:BienvenidaComponent, path:'', data: { animation: 'login' }},
+    {component:LoginComponent, path:'login', data: { animation: 'bienvenida' }},
+    {component:OpcionesRegistroComponent, path:'opciones-registro', data: { animation: 'registro' }},
     {component:RegistroComponent, path:'registro', children:[
         {component:RegistroPacienteComponent, path:'registro-paciente'},
         {component:RegistroEspecialistaComponent, path:'registro-especialista'}
