@@ -30,7 +30,7 @@ export class ListadoTurnosComponent {
 
   ngOnChanges(){
     console.log(this.filtros);
-    this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])||this.filtros['especialistas'].includes(turno['idEspecialista']))
+    this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])&&this.filtros['especialistas'].includes(turno['idEspecialista']))
   }
 
   async obtenerTurnos(){

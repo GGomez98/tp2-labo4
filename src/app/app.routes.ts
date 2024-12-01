@@ -12,6 +12,7 @@ import { PerfilComponent } from './components/perfil/perfil.component';
 import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-turno.component';
 import { TurnosAdminComponent } from './components/turnos-admin/turnos-admin.component';
 import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
+import { PacientesComponent } from './components/pacientes/pacientes.component';
 
 export const routes: Routes = [
     {component:BienvenidaComponent, path:'', data: { animation: 'login' }},
@@ -26,5 +27,6 @@ export const routes: Routes = [
     {component: PerfilComponent, path: 'perfil', canActivate: [authGuard]},
     {component: SolicitarTurnoComponent, path: 'solicitar-turno', canActivate: [authGuard]},
     {component: TurnosAdminComponent, path:'turnos', canActivate: [authGuard]},
-    {component: MisTurnosComponent, path:'mis-turnos'}
+    {component: MisTurnosComponent, path:'mis-turnos', canActivate: [authGuard]},
+    {component: PacientesComponent, path:'pacientes'}
 ];

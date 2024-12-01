@@ -1,0 +1,41 @@
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000; /* Asegura que esté encima del contenido */
+}
+
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.dropdown-menu{
+    button{
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        background-size: cover; /* Asegura que la imagen cubra todo el botón */
+        background-position: center; /* Centra la imagen */
+        background-color: purple;
+        p{
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.689);
+        }
+    }
+}
+
+.dropdown-menu.show{
+    background-color: transparent;
+    border: none;
+}

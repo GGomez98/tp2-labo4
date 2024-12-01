@@ -26,6 +26,15 @@
                     <label [for]="especialidad">{{especialidad}}</label>
                 </div>
             </div>
+            <h3>Buscar por Campo</h3>
+            <div class="valores">
+                <div class="form-group">
+                    <label for="campo">Campo: </label>
+                    <input type="text" name="campo" formControlName="campo">
+                    <label for="valor">Valor: </label>
+                    <input type="text" name="valor" formControlName="valor">
+                </div>
+            </div>
         
             <button (click)="aplicarFiltrosFn()">Aplicar Filtros</button>
         </form>

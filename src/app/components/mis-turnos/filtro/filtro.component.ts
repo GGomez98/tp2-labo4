@@ -46,6 +46,8 @@ export class FiltroComponent {
       this.filtros = this.fb.group({
         ...especialistasControls,
         ...especialidadesControls,
+        campo: "",
+        valor: ""
       });
     }
     else{
@@ -57,6 +59,8 @@ export class FiltroComponent {
       this.filtros = this.fb.group({
         ...pacientesControls,
         ...especialidadesControls,
+        campo: "",
+        valor: ""
       });
     }
   }
@@ -123,14 +127,14 @@ export class FiltroComponent {
         this.especialistas.some(especialista => especialista.id === key)
       );
   
-      this.filtrar.emit({'especialistas':seleccionadosEspecialistas, 'especialidades': seleccionadosEspecialidades})
+      this.filtrar.emit({'especialistas':seleccionadosEspecialistas, 'especialidades': seleccionadosEspecialidades, 'campo':this.filtros.value['campo'], 'valor':this.filtros.value['valor']})
     }
     else{
       const seleccionadosPacientes = seleccionados.filter(key =>
         this.pacientes.some(paciente => paciente.id === key)
       );
   
-      this.filtrar.emit({'pacientes':seleccionadosPacientes, 'especialidades': seleccionadosEspecialidades})
+      this.filtrar.emit({'pacientes':seleccionadosPacientes, 'especialidades': seleccionadosEspecialidades, 'campo':this.filtros.value['campo'], 'valor':this.filtros.value['valor']})
     }
   }
 }

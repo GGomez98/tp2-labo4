@@ -197,5 +197,6 @@ export class LoginComponent {
   CompletarInputs(mail:string,pass:string) {
     this.userMail=mail;
     this.userPWD=pass;
+    this.auth.signOut();
   }
 }

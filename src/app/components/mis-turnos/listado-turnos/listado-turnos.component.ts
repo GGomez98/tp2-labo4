@@ -61,10 +61,20 @@ export class ListadoTurnosComponent {
   async ngOnChanges(){
     console.log(this.filtros);
     if(this.userData['rol'] == 'paciente'){
-      this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])||this.filtros['especialistas'].includes(turno['idEspecialista']))
+      this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])&&this.filtros['especialistas'].includes(turno['idEspecialista']))
     }
     else{
-      this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])||this.filtros['pacientes'].includes(turno['idPaciente']))
+      this.turnosFiltrados = this.turnos.filter((turno:any) => this.filtros['especialidades'].includes(turno['especialidad'])&&this.filtros['pacientes'].includes(turno['idPaciente']))
+    }
+
+    if(this.filtros['campo'].toLowerCase() == 'fecha' ||this.filtros['campo'].toLowerCase() == 'paciente'||this.filtros['campo'].toLowerCase() == 'especialista'||this.filtros['campo'].toLowerCase() == 'especialidad'||this.filtros['campo'].toLowerCase() == 'estado'){
+      this.turnosFiltrados = this.turnosFiltrados.filter((turno:any) => new RegExp(`^${this.filtros['valor']}`, 'i').test(turno[this.filtros['campo'].toLowerCase()]))
+    }
+    else if(this.filtros['campo'].toLowerCase() == 'altura' ||this.filtros['campo'].toLowerCase() == 'peso'||this.filtros['campo'].toLowerCase() == 'presion'||this.filtros['campo'].toLowerCase() == 'temperatura'){
+      this.turnosFiltrados = this.turnosFiltrados.filter((turno:any) =>turno['historiaClinica'] != undefined && turno['historiaClinica'][this.filtros['campo'].toLowerCase()] == this.filtros['valor'])
+    }
+    else if(this.filtros['campo'] != '' && this.filtros['valor'] != ''){
+      this.turnosFiltrados = this.turnosFiltrados.filter((turno:any) =>turno['historiaClinica'] != undefined && turno['historiaClinica']['datosDinamicos'] != undefined && turno['historiaClinica']['datosDinamicos'][this.filtros['campo'].toLowerCase()] != undefined && turno['historiaClinica']['datosDinamicos'][this.filtros['campo'].toLowerCase()] == this.filtros['valor'])
     }
   }
 
@@ -85,7 +95,7 @@ export class ListadoTurnosComponent {
     const datosDinamicosArray = this.datosDinamicos.value; // Obtiene el array de pares clave-valor
       const datosComoObjeto = datosDinamicosArray.reduce((obj: any, item: any) => {
         if (item.clave) {
-          obj[item.clave] = item.valor; // Agrega la clave y valor al objeto
+          obj[item.clave.toLowerCase()] = item.valor; // Agrega la clave y valor al objeto
         }
         return obj;
       }, {});

@@ -1,4 +1,4 @@
-<div class="card">
+<div class="container my-5">
     @if(usuariosCargados){
     <h2>Lista de Usuarios</h2>
       <nav>
@@ -7,99 +7,53 @@
         <button (click)="obtenerUsuarios('administradores')" class="lista" #administradoresBtn>Administradores</button>
         <button (click)="descargarUsuarios()">Descargar Datos</button>
       </nav>
-      @if(listaAdministradores){
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Apellido</th>
-              <th scope="col">Edad</th>
-              <th scope="col">DNI</th>
-              <th scope="col">Email</th>
-              <th scope="col">Rol</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usuario of usuarios">
-              <td><img [src]="usuario.imagen"></td>
-              <td>{{usuario.nombre}}</td>
-              <td>{{usuario.apellido}}</td>
-              <td>{{usuario.edad}}</td>
-              <td>{{usuario.dni}}</td>
-              <td>{{usuario.email}}</td>
-              <td>{{usuario.rol}}</td>
-            </tr>
-          </tbody>
-        </table>
-      }
-      @else if(listaEspecialistas){
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Apellido</th>
-              <th scope="col">Edad</th>
-              <th scope="col">DNI</th>
-              <th scope="col">Email</th>
-              <th scope="col">Especialidades</th>
-              <th scope="col">Rol</th>
-              <th scope="col">Inhabilitado/Habilitado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usuario of usuarios">
-              <td><img [src]="usuario.imagen"></td>
-              <td>{{usuario.nombre}}</td>
-              <td>{{usuario.apellido}}</td>
-              <td>{{usuario.edad}}</td>
-              <td>{{usuario.dni}}</td>
-              <td>{{usuario.email}}</td>
-              <td>{{usuario.especialidades}}</td>
-              <td>{{usuario.rol}}</td>
-              <td>
-                <div class="form-check form-switch">
-                  @if(usuario.verificado){
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked (click)="cambiarEstadoEspecialista(usuario, false)">
-                  }
-                  @else {
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (click)="cambiarEstadoEspecialista(usuario, true)">
-                  }
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      }
-      @else{
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Apellido</th>
-              <th scope="col">Edad</th>
-              <th scope="col">DNI</th>
-              <th scope="col">Email</th>
-              <th scope="col">Obra Social</th>
-              <th scope="col">Rol</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usuario of usuarios">
-              <td><img [src]="usuario.imagen1"></td>
-              <td>{{usuario.nombre}}</td>
-              <td>{{usuario.apellido}}</td>
-              <td>{{usuario.edad}}</td>
-              <td>{{usuario.dni}}</td>
-              <td>{{usuario.email}}</td>
-              <td>{{usuario.obraSocial}}</td>
-              <td>{{usuario.rol}}</td>
-            </tr>
-          </tbody>
-        </table>
-      }
+      <div class="usuarios-container">
+        @if(listaAdministradores){
+          <div class="card" *ngFor="let usuario of usuarios">
+            <img [src]="usuario.imagen">
+            <div class="card-body">
+              <h5>{{usuario.nombre}} {{usuario.apellido}}</h5>
+              <p>Edad: {{usuario.edad}}</p>
+              <p>DNI: {{usuario.dni}}</p>
+              <p>Email: {{usuario.email}}</p>
+            </div>
+          </div>
+        }
+        @else if(listaEspecialistas){
+          <div class="card" *ngFor="let usuario of usuarios">
+            <img [src]="usuario.imagen">
+            <div class="card-body">
+              <h5>{{usuario.nombre}} {{usuario.apellido}}</h5>
+              <p>Edad: {{usuario.edad}}</p>
+              <p>DNI: {{usuario.dni}}</p>
+              <p>Email: {{usuario.email}}</p>
+              <p>Especialidades: {{usuario.especialidades}}</p>
+              <p>Inhabilitado/Habilitado</p>
+              <div class="form-check form-switch">
+                @if(usuario.verificado){
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked (click)="cambiarEstadoEspecialista(usuario, false)">
+                }
+                @else {
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (click)="cambiarEstadoEspecialista(usuario, true)">
+                }
+              </div>
+            </div>
+          </div>
+        }
+        @else{
+          <div class="card" *ngFor="let usuario of usuarios">
+            <img [src]="usuario.imagen1">
+            <div class="card-body">
+              <h5>{{usuario.nombre}} {{usuario.apellido}}</h5>
+              <p>Edad: {{usuario.edad}}</p>
+              <p>DNI: {{usuario.dni}}</p>
+              <p>Email: {{usuario.email}}</p>
+              <p>Obra Social: {{usuario.obraSocial}}</p>
+              <button (click)="descargarHistoriaClinicaPorPaciente(usuario.id)">Descargar Turnos</button>
+            </div>
+          </div>
+        }
+      </div>
     }
     @else{
       <div class="d-flex justify-content-center">

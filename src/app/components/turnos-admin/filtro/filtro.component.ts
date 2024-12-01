@@ -78,7 +78,5 @@ export class FiltroComponent {
     const seleccionadosEspecialidades = seleccionados.filter(key =>
       this.especialidades.includes(key)
     );
-
-    this.filtrar.emit({'especialistas':seleccionadosEspecialistas, 'especialidades': seleccionadosEspecialidades})
   }
 }

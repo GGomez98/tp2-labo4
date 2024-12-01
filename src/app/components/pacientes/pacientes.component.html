@@ -1,0 +1,83 @@
+<div class="main-container">
+    <div class="container my-5">
+        @if(pacientesCargados){
+          <h2>Mis Pacientes</h2>
+          <div class="dropdown fab-menu">
+            <button class="btn btn-primary dropdown-toggle fab" type="button" id="fabDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="fabDropdown">
+                <button *ngFor="let paciente of pacientes" (click)="seleccionarPaciente(paciente.id)" [ngStyle]="{ 'background-image': 'url(' + paciente.imagen1 + ')','border-radius':'50%' }">
+                    <p>{{paciente.nombre}} {{paciente.apellido}}</p>
+                </button>
+            </div>
+            @if(turnosPorPacienteCargados){
+              <table class="table table-striped table-hover table-bordered" id="historia-clinica">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Especialista</th>
+                    <th>Altura</th>
+                    <th>Peso</th>
+                    <th>Presion</th>
+                    <th>Temperatura</th>
+                    <th>Datos Adicionales</th>
+                    <th>Reseña</th>
+                  </tr>
+                </thead>
+                  <tbody>
+                    <tr *ngFor="let turno of turnosPorPaciente">
+                        <td>{{turno.fecha}}</td>
+                        <td>{{turno.hora | timeFormat}}</td>
+                        <td>{{turno.especialista}}</td>
+                        <td>{{turno.historiaClinica.altura}}</td>
+                        <td>{{turno.historiaClinica.peso}}</td>
+                        <td>{{turno.historiaClinica.presion}}</td>
+                        <td>{{turno.historiaClinica.temperatura}}</td>
+                        <td>
+                            <ul>
+                                <li *ngFor="let item of turno.historiaClinica.datosDinamicos | keyValueList">
+                                  {{ item.key }}: {{ item.value }}
+                                </li>
+                            </ul>
+                        </td>
+                        @if(turno.resenia != undefined){
+                          <td>
+                            <button (click)="abrirModal(content)">Ver Reseña</button>
+                            <ng-template #content let-modal class="resenia">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Reseña</h4>
+                                <button type="button" class="btn-close" (click)="modal.close()"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>{{turno.resenia}}</p>
+                              </div>
+                            </ng-template>
+                          </td>
+                        }
+                        @else {
+                          <td></td>
+                        }
+                    </tr>
+                  </tbody>
+              </table>
+            }
+            @else {
+              <div class="d-flex justify-content-center">
+                <div class="spinner-border text-info" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        @else{
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        }
+      </div>
+</div>
