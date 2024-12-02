@@ -9,11 +9,12 @@ import { TimeFormatPipe } from '../../../pipes/time-format.pipe';
 import jsPDF from 'jspdf';
 import moment from 'moment';
 import autoTable from "jspdf-autotable";
+import { ReplaceImageDirective } from '../../../directives/replace-image.directive';
 
 @Component({
   selector: 'app-lista-usuarios',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReplaceImageDirective],
   providers: [TimeFormatPipe, KeyValuePipe],
   templateUrl: './lista-usuarios.component.html',
   styleUrl: './lista-usuarios.component.scss'
@@ -32,7 +33,7 @@ export class ListaUsuariosComponent {
   turnosCargados = false;
   turnosPorPaciente: any[] = []
 
-  constructor(public auth: Auth, private firestore: Firestore, private timeFormat: TimeFormatPipe, private keyValueList: KeyValuePipe) {}
+  constructor(public auth: Auth, private firestore: Firestore) {}
 
   ngOnInit(){
     this.obtenerTodosLosUsuarios();

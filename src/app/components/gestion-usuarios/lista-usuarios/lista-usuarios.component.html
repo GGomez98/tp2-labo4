@@ -42,7 +42,7 @@
         }
         @else{
           <div class="card" *ngFor="let usuario of usuarios">
-            <img [src]="usuario.imagen1">
+            <img appReplaceImage [src]="usuario.imagen1" [defaultImage]="usuario.imagen1" [hoverImage]="usuario.imagen2">
             <div class="card-body">
               <h5>{{usuario.nombre}} {{usuario.apellido}}</h5>
               <p>Edad: {{usuario.edad}}</p>

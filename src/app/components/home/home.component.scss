@@ -2,8 +2,11 @@
     background-image:url("/assets/images/hospital.jpg");
     background-size: cover;
     justify-content: center;
-    height: 94.5vh;
+    min-height: 94.5vh;
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .card-deck{

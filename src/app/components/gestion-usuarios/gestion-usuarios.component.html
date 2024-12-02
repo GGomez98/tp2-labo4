@@ -1,15 +1,18 @@
 <div class="main-container">
     <app-lista-usuarios></app-lista-usuarios>
     <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminRegister">
-    Registrar Administrador
-  </button>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#especialistaRegister">
-    Registrar Especialista
-  </button>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pacienteRegister">
-    Registrar Paciente
-  </button>
+    <div class="registros">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminRegister">
+        Registrar Administrador
+      </button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#especialistaRegister">
+        Registrar Especialista
+      </button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pacienteRegister">
+        Registrar Paciente
+      </button>
+    </div>
+    <app-graficos></app-graficos>
   
   <!-- Modal -->
   <div class="modal fade modal-lg" id="adminRegister" tabindex="-1" aria-labelledby="adminRegisterLabel" aria-hidden="true">

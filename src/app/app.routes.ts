@@ -28,5 +28,5 @@ export const routes: Routes = [
     {component: SolicitarTurnoComponent, path: 'solicitar-turno', canActivate: [authGuard]},
     {component: TurnosAdminComponent, path:'turnos', canActivate: [authGuard]},
     {component: MisTurnosComponent, path:'mis-turnos', canActivate: [authGuard]},
-    {component: PacientesComponent, path:'pacientes'}
+    {component: PacientesComponent, path:'pacientes',canActivate: [authGuard]}
 ];

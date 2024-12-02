@@ -4,11 +4,12 @@ import { ListaUsuariosComponent } from "./lista-usuarios/lista-usuarios.componen
 import { Modal } from 'bootstrap';
 import { RegistroEspecialistaComponent } from '../../registro/registro-especialista/registro-especialista.component';
 import { RegistroPacienteComponent } from '../../registro/registro-paciente/registro-paciente.component';
+import { GraficosComponent } from "./graficos/graficos.component";
 
 @Component({
   selector: 'app-gestion-usuarios',
   standalone: true,
-  imports: [RegistroAdminsComponent, ListaUsuariosComponent, RegistroEspecialistaComponent, RegistroPacienteComponent ],
+  imports: [RegistroAdminsComponent, ListaUsuariosComponent, RegistroEspecialistaComponent, RegistroPacienteComponent, GraficosComponent],
   templateUrl: './gestion-usuarios.component.html',
   styleUrl: './gestion-usuarios.component.scss'
 })

@@ -244,14 +244,29 @@ export class ListadoTurnosComponent {
 
   async calificarAtencion(turno: any, comentario: String, modal:any){
     this.calificacionEnviada = true;
-    const turnoData={
-      especialidad: turno.especialidad,
-      estado: turno.estado,
-      fecha: turno.fecha,
-      hora: turno.hora,
-      idEspecialista: turno.idEspecialista,
-      idPaciente: turno.idPaciente,
-      calificacionAtencion: comentario.trim()
+    let turnoData;
+    if(turno.resenia != undefined){
+      turnoData={
+        especialidad: turno.especialidad,
+        estado: turno.estado,
+        fecha: turno.fecha,
+        hora: turno.hora,
+        idEspecialista: turno.idEspecialista,
+        idPaciente: turno.idPaciente,
+        calificacionAtencion: comentario.trim(),
+        resenia: turno.resenia
+      }
+    }
+    else{
+      turnoData={
+        especialidad: turno.especialidad,
+        estado: turno.estado,
+        fecha: turno.fecha,
+        hora: turno.hora,
+        idEspecialista: turno.idEspecialista,
+        idPaciente: turno.idPaciente,
+        calificacionAtencion: comentario.trim()
+      }
     }
     if(comentario != ''){
       this.calificacionAtencionVacia = false;
@@ -288,14 +303,29 @@ export class ListadoTurnosComponent {
 
   async enviarEncuesta(turno: any, puntaje: String, modal:any){
     this.puntajeEnviado = true;
-    const turnoData={
-      especialidad: turno.especialidad,
-      estado: turno.estado,
-      fecha: turno.fecha,
-      hora: turno.hora,
-      idEspecialista: turno.idEspecialista,
-      idPaciente: turno.idPaciente,
-      puntajeEncuesta: puntaje
+    let turnoData;
+    if(turno.resenia != undefined){
+      turnoData={
+        especialidad: turno.especialidad,
+        estado: turno.estado,
+        fecha: turno.fecha,
+        hora: turno.hora,
+        idEspecialista: turno.idEspecialista,
+        idPaciente: turno.idPaciente,
+        puntajeEncuesta: puntaje,
+        resenia: turno.resenia
+      }
+    }
+    else{
+      turnoData={
+        especialidad: turno.especialidad,
+        estado: turno.estado,
+        fecha: turno.fecha,
+        hora: turno.hora,
+        idEspecialista: turno.idEspecialista,
+        idPaciente: turno.idPaciente,
+        puntajeEncuesta: puntaje
+      }
     }
     if(puntaje != ''){
       this.puntajeVacio = false;

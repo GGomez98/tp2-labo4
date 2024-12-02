@@ -34,6 +34,10 @@ export class LoginComponent {
 
   constructor(public auth: Auth, private router: Router, private firestore: Firestore) {}
 
+  ngOnInit(){
+    this.auth.signOut();
+  }
+
   convertBase64ToURL(base64Image: string, contentType: string = 'image/*'): string {
     base64Image = base64Image.replace(/^data:image\/\w+;base64,/, '');
     base64Image = base64Image.replace(/\s/g, '');

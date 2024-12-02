@@ -1,0 +1,69 @@
+<div class="container my-5">
+    @if(loginsCargados && turnosCargados && especialistasCargados){
+        <nav>
+            <button (click)="seleccionarLista('logins')" >Logins</button>
+            <button (click)="seleccionarLista('turnos por dia')">Turnos por dia</button>
+            <button (click)="seleccionarLista('turnos por especialidad')">Turnos por especialidad</button>
+            <button (click)="seleccionarLista('turnos por estado y fecha')">Turnos por estado y fecha</button>
+        </nav>
+        @if(listaSeleccionada == 'logins'){
+            <h2>Historial de logins</h2>
+            <table class="table table-striped table-hover table-bordered" id="logins">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Dia</th>
+                    <th>Hora</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let login of logins">
+                      <td>{{login.user}}</td>
+                      <td>{{login.fecha | timestampToDate:'dd-mm-yyyy'}}</td>
+                      <td>{{login.fecha | timestampToDate:'HH:mm'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        }
+        @else if(listaSeleccionada == 'turnos por dia'){
+            <h2>Turnos por día</h2>
+            <button (click)="descargar('chart-turno-fecha', 'Turnos por dia')">Descargar</button>
+            <div class="chart-container" style="position: relative; height:400px; width:80%;">
+                <canvas id="chart-turno-fecha"></canvas>
+            </div>
+        }
+        @else if(listaSeleccionada == 'turnos por especialidad'){
+            <h2>Turnos por especialidad</h2>
+            <button (click)="descargar('chart-turno-especialidad', 'Turnos por especialidad')">Descargar</button>
+            <div class="chart-container" style="position: relative; height:400px; width:80%;">
+                <canvas id="chart-turno-especialidad"></canvas>
+            </div>
+        }
+        @else if(listaSeleccionada == 'turnos por estado y fecha'){
+            <h2>Turnos por estado y fecha</h2>
+            <button (click)="descargar('chart-turno-especialidad', 'Turnos aceptados o solicitados del '+fechas.get('fechaInicio')?.value+' al '+fechas.get('fechaFin')?.value)">Descargar</button>
+            <form [formGroup]="fechas">
+                <label for="fechaInicio">Desde:</label>
+                <input type="date" id="fechaInicio" formControlName="fechaInicio" (change)="agruparTurnosPorEstadoYFecha(fechas.get('fechaInicio')?.value,fechas.get('fechaFin')?.value, fechas.get('especialista')?.value)">
+                <label for="fechaFin">Hasta:</label>
+                <input type="date" id="fechaFin" formControlName="fechaFin" (change)="agruparTurnosPorEstadoYFecha(fechas.get('fechaInicio')?.value,fechas.get('fechaFin')?.value, fechas.get('especialista')?.value)">
+                <label for="especialista">Especialista:</label>
+                <select formControlName="especialista" id="especialista" (change)="agruparTurnosPorEstadoYFecha(fechas.get('fechaInicio')?.value,fechas.get('fechaFin')?.value, fechas.get('especialista')?.value)">
+                    <option *ngFor="let especialista of especialistas" [value]="especialista.id">
+                        {{especialista.nombre}} {{especialista.apellido}}
+                    </option>
+                </select>
+            </form>
+            <div class="chart-container" style="position: relative; height:400px; width:80%;">
+                <canvas id="chart-turno-estado-fecha"></canvas>
+            </div>
+        }
+    }
+    @else{
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+</div>

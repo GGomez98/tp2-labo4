@@ -14,6 +14,26 @@
     }
 }
 
+form{
+    display: flex;
+    flex-wrap: wrap;
+    .form-group{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        label{
+            width: 30%;
+        }
+        .dinamic-group{
+            display: flex;
+            flex-wrap: wrap;
+            input{
+                margin: 5px;
+            }
+        }
+    }
+}
+
 textarea{
     width: 100%;
 }

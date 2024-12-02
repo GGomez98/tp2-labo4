@@ -37,14 +37,14 @@
                 @if(turno.estado != 'Aceptado' && turno.estado != 'Finalizado' && turno.estado != 'Rechazado' && turno.estado != 'Cancelado'){
                   @if(userData['rol'] == 'especialista'){
                     <td>
-                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Rechazar Turno</button>
-                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button>
-                      <button data-bs-toggle="modal" (click)="aceptarTurno(turno)">Aceptar Turno</button>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)" class="btn btn-danger">Rechazar Turno</button>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)" class="btn btn-warning">Cancelar Turno</button>
+                      <button data-bs-toggle="modal" (click)="aceptarTurno(turno)" class="btn btn-success">Aceptar Turno</button>
                     </td>
                   }
                   @else{
                     <td>
-                      <button data-bs-toggle="modal" (click)="abrirModal(content)">Cancelar Turno</button>
+                      <button data-bs-toggle="modal" (click)="abrirModal(content)" class="btn btn-secondary">Cancelar Turno</button>
                     </td>
                   }
                   <ng-template #content let-modal class="rechazar-container">
@@ -89,13 +89,13 @@
                   <td>Motivo rechazo: {{turno.motivoRechazo}}</td>
                 }
                 @else if(turno.estado == 'Aceptado' && userData['rol'] == 'especialista'){
-                  <td><button data-bs-toggle="modal" (click)=" abrirModal(content)">Finalizar Turno</button></td>
+                  <td><button data-bs-toggle="modal" (click)=" abrirModal(content)" class="btn btn-primary">Finalizar Turno</button></td>
                   <ng-template #content let-modal class="finalizar-container">
                     <div class="modal-header">
                       <h4 class="modal-title">Finalizar Turno</h4>
                       <button type="button" class="btn-close" (click)="modal.close()"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body modal-content">
                       <form [formGroup]="historiaClinica">
                         <div class="form-group">
                           <label for="altura">Altura</label>
@@ -128,18 +128,40 @@
                         <div class="form-group">
                           <label>Datos Dinamicos</label>
                           <div class="datos-dinamicos" formArrayName="datosDinamicos" *ngFor="let dato of datosDinamicos.controls; let i = index">
-                            <div [formGroupName]="i">
-                              <input type="text" class="clave" formControlName="clave">
-                              <input type="text" class="valor" formControlName="valor">
-                            </div>
+                            @if(i == 3){
+                              <div [formGroupName]="i" class="dinamic-group">
+                                <input type="text" class="clave" formControlName="clave">
+                                <input type="range" class="valor" formControlName="valor" min="0" max="100" step="1">
+                              </div>
+                            }
+                            @else if(i==4){
+                              <div [formGroupName]="i" class="dinamic-group">
+                                <input type="text" class="clave" formControlName="clave">
+                                <input type="number" class="valor" formControlName="valor">
+                              </div>
+                            }
+                            @else if(i==5){
+                              <div [formGroupName]="i" class="dinamic-group">
+                                <input type="text" class="clave" formControlName="clave">
+                                <div class="form-check form-switch">
+                                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked formControlName="valor">
+                                </div>
+                              </div>
+                            }
+                            @else{
+                              <div [formGroupName]="i" class="dinamic-group">
+                                <input type="text" class="clave" formControlName="clave">
+                                <input type="text" class="valor" formControlName="valor">
+                              </div>
+                            }
                           </div>
                         </div>
                         <div *ngIf="datosDinamicos?.invalid && historiaClinicaEnviada">
                           <small>Hay campos sin completar, completelos o eliminelos</small>
                         </div>
                         <div class="form-group">
-                          <button (click)="eliminarDatosDinamicos(datosDinamicos.length - 1)" *ngIf="datosDinamicos.length > 0">-</button>
-                          <button (click)="agregarDatosDinamicos()" *ngIf="datosDinamicos.length < 3">+</button>
+                          <button (click)="eliminarDatosDinamicos(datosDinamicos.length - 1)" *ngIf="datosDinamicos.length > 0" class="btn btn-danger">-</button>
+                          <button (click)="agregarDatosDinamicos()" *ngIf="datosDinamicos.length < 6" class="btn btn-success">+</button>
                         </div>
                       </form>
                       <p>Ingrese una reseña (opcional):</p>
@@ -155,7 +177,7 @@
                   @if(userData['rol'] == 'especialista'){
                     @if(turno.resenia != undefined){
                       <td>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)" class="btn btn-warning">Ver Reseña</button>
                       </td>
                     }
                     @else {
@@ -163,28 +185,28 @@
                     }
                   }
                   @else{
-                    @if(turno.resenia != undefined && turno.calificacionAtencion == undefined && turno.calificacionEncuesta == undefined){
+                    @if(turno.resenia != undefined && turno.calificacionAtencion == undefined && turno.puntajeEncuesta == undefined){
                       <td>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)">Encuesta</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)" class="btn btn-warning">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)" class="btn btn-dark">Calificar Atencion</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)" class="btn btn-info">Encuesta</button>
                       </td>
                     }
-                    @else if(turno.resenia != undefined && turno.calificacionAtencion == undefined){
+                    @else if(turno.resenia != undefined && turno.puntajeEncuesta != undefined && turno.calificacionAtencion == undefined){
                       <td>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)" class="btn btn-warning">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)" class="btn btn-dark">Calificar Atencion</button>
                       </td>
                     }
-                    @else if(turno.resenia != undefined && turno.calificacionEncuesta == undefined){
+                    @else if(turno.resenia != undefined && turno.puntajeEncuesta == undefined && turno.calificacionAtencion != undefined){
                       <td>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content)">Ver Reseña</button>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)">Encuesta</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content)" class="btn btn-warning">Ver Reseña</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content3)" class="btn btn-info">Encuesta</button>
                       </td>
                     }
-                    @else if(turno.calificacionAtencion == undefined){
+                    @else if(turno.calificacionAtencion == undefined && turno.resenia == undefined && turno.puntajeEncuesta != undefined){
                       <td>
-                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)">Calificar Atencion</button>
+                        <button data-bs-toggle="modal" (click)=" abrirModal(content2)" class="btn btn-dark">Calificar Atencion</button>
                       </td>
                     }
                     @else {

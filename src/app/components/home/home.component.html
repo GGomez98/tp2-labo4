@@ -37,11 +37,13 @@
             <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/mis-turnos">Mis Turnos</button>
           </div>
         </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-body mis-turnos">
-            <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/pacientes">Pacientes</button>
+        @if(userData['rol']=='especialista'){
+          <div class="card mb-4 box-shadow">
+            <div class="card-body mis-turnos">
+              <button type="button" class="btn btn-lg btn-block btn-primary" routerLink="/pacientes">Pacientes</button>
+            </div>
           </div>
-        </div>
+        }
       }
       </div>
 </div>
