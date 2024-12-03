@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { collection, doc, Firestore, getDoc, limit, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 import { TimestampToDatePipe } from '../../../pipes/timestamp-to-date.pipe';
 import moment from 'moment';
@@ -20,6 +20,10 @@ Chart.register(...registerables);
   styleUrl: './graficos.component.scss'
 })
 export class GraficosComponent {
+  @ViewChild('graficoUno') graficoUno!: ElementRef;
+  @ViewChild('graficoDos') graficoDos!: ElementRef;
+  @ViewChild('graficoTres') graficoTres!: ElementRef;
+  @ViewChild('graficoCuatro') graficoCuatro!: ElementRef;
   logins: any[] = []
   loginsCargados = false;
   turnos: any[] = []
@@ -160,12 +164,24 @@ export class GraficosComponent {
     setTimeout(() => {
       switch(lista){
         case 'turnos por dia':
+          this.graficoUno.nativeElement.classList.remove('active')
+          this.graficoDos.nativeElement.classList.add('active')
+          this.graficoTres.nativeElement.classList.remove('active')
+          this.graficoCuatro.nativeElement.classList.remove('active')
           this.conseguirCantidades(this.turnosPorFecha, "fecha", "cantidadTurnos", "chart-turno-fecha", "line", "Turnos")
         break;
         case 'turnos por especialidad':
+          this.graficoUno.nativeElement.classList.remove('active')
+          this.graficoDos.nativeElement.classList.remove('active')
+          this.graficoTres.nativeElement.classList.add('active')
+          this.graficoCuatro.nativeElement.classList.remove('active')
           this.conseguirCantidades(this.turnosPorEspecialidad, "especialidad", "cantidadTurnos", "chart-turno-especialidad", "bar", "Turnos")
         break;
         case 'turnos por estado y fecha':
+          this.graficoUno.nativeElement.classList.remove('active')
+          this.graficoDos.nativeElement.classList.remove('active')
+          this.graficoTres.nativeElement.classList.remove('active')
+          this.graficoCuatro.nativeElement.classList.add('active')
           this.fechas = new FormGroup({
             fechaInicio: new FormControl(moment().format('YYYY-MM-DD')),
             fechaFin: new FormControl(moment().add(30,'days').format('YYYY-MM-DD')),
@@ -174,6 +190,12 @@ export class GraficosComponent {
           setTimeout(() => {
             this.agruparTurnosPorEstadoYFecha(this.fechas.get('fechaInicio')?.value,this.fechas.get('fechaFin')?.value, this.fechas.get('especialista')?.value)
           }, 100);
+        break;
+        default:
+          this.graficoUno.nativeElement.classList.add('active')
+          this.graficoDos.nativeElement.classList.remove('active')
+          this.graficoTres.nativeElement.classList.remove('active')
+          this.graficoCuatro.nativeElement.classList.remove('active')
         break;
       }
     }, 200);

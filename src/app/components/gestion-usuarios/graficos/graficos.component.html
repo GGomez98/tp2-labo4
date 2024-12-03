@@ -1,10 +1,10 @@
 <div class="container my-5">
     @if(loginsCargados && turnosCargados && especialistasCargados){
         <nav>
-            <button (click)="seleccionarLista('logins')" >Logins</button>
-            <button (click)="seleccionarLista('turnos por dia')">Turnos por dia</button>
-            <button (click)="seleccionarLista('turnos por especialidad')">Turnos por especialidad</button>
-            <button (click)="seleccionarLista('turnos por estado y fecha')">Turnos por estado y fecha</button>
+            <button (click)="seleccionarLista('logins')" class="lista active" #graficoUno>Logins</button>
+            <button (click)="seleccionarLista('turnos por dia')" class="lista" #graficoDos>Turnos por dia</button>
+            <button (click)="seleccionarLista('turnos por especialidad')" class="lista" #graficoTres>Turnos por especialidad</button>
+            <button (click)="seleccionarLista('turnos por estado y fecha')" class="lista" #graficoCuatro>Turnos por estado y fecha</button>
         </nav>
         @if(listaSeleccionada == 'logins'){
             <h2>Historial de logins</h2>

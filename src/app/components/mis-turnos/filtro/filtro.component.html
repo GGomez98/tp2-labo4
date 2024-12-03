@@ -1,4 +1,4 @@
-<div class="card">
+<div class="container my-5">
     @if(pacientesCargados) {
         <form [formGroup]="filtros" class="filtros">
             @if(userData['rol']=='paciente'){
@@ -36,7 +36,7 @@
                 </div>
             </div>
         
-            <button (click)="aplicarFiltrosFn()">Aplicar Filtros</button>
+            <button (click)="aplicarFiltrosFn()" class="btn btn-primary">Aplicar Filtros</button>
         </form>
     }
     @else {

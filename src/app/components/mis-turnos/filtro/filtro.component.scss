@@ -5,11 +5,9 @@
     }
 }
 
-.card{
-    min-height: 85%;
-    max-height: 85%;
-    overflow-y: auto;
-    display: flex;
+.container{
+    background-color: white;
+    border-radius: 5px;
 }
 
 .d-flex{
