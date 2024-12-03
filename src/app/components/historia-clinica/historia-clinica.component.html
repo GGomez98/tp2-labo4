@@ -9,7 +9,7 @@
                     {{especialista.nombre}} {{especialista.apellido}}
                 </option>
             </select>
-            <button (click)="descargarHistoriaClinica()">Descargar</button>
+            <button (click)="descargarHistoriaClinica()" class="btn btn-primary">Descargar</button>
         </form>
         <table class="table table-striped table-hover table-bordered" id="historia-clinica">
           <thead class="table-dark">
@@ -36,7 +36,7 @@
                 <td>
                     <ul>
                         <li *ngFor="let item of turno.historiaClinica.datosDinamicos | keyValueList">
-                          {{ item.key }}: {{ item.value }}
+                          {{ item.key }}: {{ item.value | siNoPipe}}
                         </li>
                     </ul>
                 </td>

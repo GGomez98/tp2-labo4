@@ -41,7 +41,7 @@
         }
         @else if(listaSeleccionada == 'turnos por estado y fecha'){
             <h2>Turnos por estado y fecha</h2>
-            <button (click)="descargar('chart-turno-especialidad', 'Turnos aceptados o solicitados del '+fechas.get('fechaInicio')?.value+' al '+fechas.get('fechaFin')?.value)">Descargar</button>
+            <button (click)="descargar('chart-turno-especialidad', 'Turnos aceptados o solicitados')">Descargar</button>
             <form [formGroup]="fechas">
                 <label for="fechaInicio">Desde:</label>
                 <input type="date" id="fechaInicio" formControlName="fechaInicio" (change)="agruparTurnosPorEstadoYFecha(fechas.get('fechaInicio')?.value,fechas.get('fechaFin')?.value, fechas.get('especialista')?.value)">

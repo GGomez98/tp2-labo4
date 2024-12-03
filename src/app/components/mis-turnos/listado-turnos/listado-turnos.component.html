@@ -165,7 +165,7 @@
                         </div>
                       </form>
                       <p>Ingrese una reseña (opcional):</p>
-                      <textarea #textarea></textarea>
+                      <textarea #textarea [appMaxLength]="200"></textarea>
                     </div>
                     <div class="modal-footer">
                       <button class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
@@ -228,7 +228,7 @@
                       <button type="button" class="btn-close" (click)="modal.close()"></button>
                     </div>
                     <div class="modal-body">
-                      <textarea #textarea></textarea>
+                      <textarea #textarea [appMaxLength]="200"></textarea>
                     </div>
                     <div *ngIf="calificacionAtencionVacia && calificacionEnviada">
                       <small>Ingrese un comentario</small>

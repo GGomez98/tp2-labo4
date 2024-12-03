@@ -5,14 +5,14 @@ import { collection, doc, Firestore, getDoc, onSnapshot, setDoc } from '@angular
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import bootstrap, { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { RangePipe } from '../../../pipes/range.pipe';
 import { TimeFormatPipe } from '../../../pipes/time-format.pipe';
 import { CambiarColorCeldaDirective } from '../../../directives/cambiar-color-celda.directive';
+import { MaxLengthDirective } from '../../../directives/max-length.directive';
 
 @Component({
   selector: 'app-listado-turnos',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TimeFormatPipe, CambiarColorCeldaDirective],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TimeFormatPipe, CambiarColorCeldaDirective, MaxLengthDirective],
   templateUrl: './listado-turnos.component.html',
   styleUrl: './listado-turnos.component.scss'
 })
@@ -245,6 +245,7 @@ export class ListadoTurnosComponent {
   async calificarAtencion(turno: any, comentario: String, modal:any){
     this.calificacionEnviada = true;
     let turnoData;
+    console.log(turno)
     if(turno.resenia != undefined){
       turnoData={
         especialidad: turno.especialidad,
@@ -254,7 +255,8 @@ export class ListadoTurnosComponent {
         idEspecialista: turno.idEspecialista,
         idPaciente: turno.idPaciente,
         calificacionAtencion: comentario.trim(),
-        resenia: turno.resenia
+        resenia: turno.resenia,
+        historiaClinica: turno.historiaClinica
       }
     }
     else{
@@ -265,7 +267,8 @@ export class ListadoTurnosComponent {
         hora: turno.hora,
         idEspecialista: turno.idEspecialista,
         idPaciente: turno.idPaciente,
-        calificacionAtencion: comentario.trim()
+        calificacionAtencion: comentario.trim(),
+        historiaClinica: turno.historiaClinica
       }
     }
     if(comentario != ''){
@@ -283,6 +286,7 @@ export class ListadoTurnosComponent {
           Swal.showLoading();
         }
       });
+
       try{
         const turnoDocRef = doc(this.firestore, `turnos/${turno.id}`);
         await setDoc(turnoDocRef, turnoData);
@@ -313,7 +317,8 @@ export class ListadoTurnosComponent {
         idEspecialista: turno.idEspecialista,
         idPaciente: turno.idPaciente,
         puntajeEncuesta: puntaje,
-        resenia: turno.resenia
+        resenia: turno.resenia,
+        historiaClinica: turno.historiaClinica
       }
     }
     else{
@@ -324,7 +329,8 @@ export class ListadoTurnosComponent {
         hora: turno.hora,
         idEspecialista: turno.idEspecialista,
         idPaciente: turno.idPaciente,
-        puntajeEncuesta: puntaje
+        puntajeEncuesta: puntaje,
+        historiaClinica: turno.historiaClinica
       }
     }
     if(puntaje != ''){

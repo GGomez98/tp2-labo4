@@ -17,7 +17,6 @@
                   <tr>
                     <th>Fecha</th>
                     <th>Hora</th>
-                    <th>Especialista</th>
                     <th>Altura</th>
                     <th>Peso</th>
                     <th>Presion</th>
@@ -30,7 +29,6 @@
                     <tr *ngFor="let turno of turnosPorPaciente">
                         <td>{{turno.fecha}}</td>
                         <td>{{turno.hora | timeFormat}}</td>
-                        <td>{{turno.especialista}}</td>
                         <td>{{turno.historiaClinica.altura}}</td>
                         <td>{{turno.historiaClinica.peso}}</td>
                         <td>{{turno.historiaClinica.presion}}</td>
@@ -38,7 +36,7 @@
                         <td>
                             <ul>
                                 <li *ngFor="let item of turno.historiaClinica.datosDinamicos | keyValueList">
-                                  {{ item.key }}: {{ item.value }}
+                                  {{ item.key }}: {{ item.value | siNoPipe}}
                                 </li>
                             </ul>
                         </td>

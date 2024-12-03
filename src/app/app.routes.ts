@@ -15,13 +15,13 @@ import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component
 import { PacientesComponent } from './components/pacientes/pacientes.component';
 
 export const routes: Routes = [
-    {component:BienvenidaComponent, path:'', data: { animation: 'login' }},
-    {component:LoginComponent, path:'login', data: { animation: 'bienvenida' }},
+    {component:BienvenidaComponent, path:'', data: { animation: 'bienvenida' }},
+    {component:LoginComponent, path:'login', data: { animation: 'login' }},
     {component:OpcionesRegistroComponent, path:'opciones-registro', data: { animation: 'registro' }},
     {component:RegistroComponent, path:'registro', children:[
         {component:RegistroPacienteComponent, path:'registro-paciente'},
         {component:RegistroEspecialistaComponent, path:'registro-especialista'}
-    ]},
+    ], data: { animation: 'opcion-registro' }},
     {component:HomeComponent, path: 'home', canActivate: [authGuard]},
     {component: GestionUsuariosComponent, path: 'gestion-usuarios', canActivate: [authGuard]},
     {component: PerfilComponent, path: 'perfil', canActivate: [authGuard]},

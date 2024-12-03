@@ -5,11 +5,12 @@ import { collection, doc, Firestore, getDoc, onSnapshot } from '@angular/fire/fi
 import { TimeFormatPipe } from "../../pipes/time-format.pipe";
 import { KeyValueListPipe } from "../../pipes/key-value-list.pipe";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SiNoPipe } from '../../pipes/si-no-pipe.pipe';
 
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-  imports: [CommonModule, TimeFormatPipe, KeyValueListPipe],
+  imports: [CommonModule, TimeFormatPipe, KeyValueListPipe, SiNoPipe],
   templateUrl: './pacientes.component.html',
   styleUrl: './pacientes.component.scss'
 })

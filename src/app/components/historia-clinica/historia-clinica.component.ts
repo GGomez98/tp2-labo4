@@ -8,11 +8,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import moment from 'moment';
+import { SiNoPipe } from "../../pipes/si-no-pipe.pipe";
 
 @Component({
   selector: 'app-historia-clinica',
   standalone: true,
-  imports: [CommonModule, TimeFormatPipe, KeyValueListPipe, ReactiveFormsModule],
+  imports: [CommonModule, TimeFormatPipe, KeyValueListPipe, ReactiveFormsModule, SiNoPipe],
   templateUrl: './historia-clinica.component.html',
   styleUrl: './historia-clinica.component.scss'
 })
